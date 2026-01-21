@@ -33,8 +33,25 @@ export default function SignupForm() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    // Validate that passwords match before proceeding.
+    if (formData.password !== formData.confirmPassword) {
+      window.alert("Passwords do not match.");
+      return;
+    }
+
+    // Ensure the user has agreed to the terms before proceeding.
+    const form = e.currentTarget;
+    const termsCheckbox = form.querySelector(
+      'input[name="terms"]'
+    ) as HTMLInputElement | null;
+
+    if (termsCheckbox && !termsCheckbox.checked) {
+      window.alert("You must agree to the terms and conditions.");
+      return;
+    }
     router.push("/select-teams");
   };
 
