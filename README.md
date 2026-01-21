@@ -1,46 +1,36 @@
-# ⚽ Renaissance — Frontend
-join us on telegram to build with us https://t.me/+7CVopkI8kO85MWY0
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-Renaissance is a next-generation football engagement platform that blends live football data, premium player lifestyle content, and Web3-powered interactions into a seamless user experience. This repository contains the **frontend application**, built with **Next.js**, designed for speed, scalability, and a modern Web3 user experience.
+## Getting Started
 
----
+First, run the development server:
 
-## 🌍 Project Overview
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
+```
 
-Renaissance allows football fans to:
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-- Follow their favourite football clubs and players
-- View live scores and match updates in real time
-- Access premium football star lifestyle content
-- Interact with Web3 features such as decentralized betting and rewards
-- Connect their crypto wallets for on-chain interactions
-- Experience football fandom through a modern, blockchain-enabled interface
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-The frontend acts as the **primary user-facing layer**, communicating with both traditional APIs and the Renaissance blockchain backend powered by **Stellar**.
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
----
+## Learn More
 
-## 🧩 Key Features
+To learn more about Next.js, take a look at the following resources:
 
-- ⚡ **Fast & Responsive UI** powered by Next.js
-- 🌙 **Modern UI/UX** with dark/light mode support
-- 📊 **Live Football Scores & Match Feeds**
-- ⭐ **Premium Player Lifestyle Content**
-- 💰 **Decentralized Betting Interface**
-- 🔐 **Wallet Connection & Authentication**
-- 🧠 **Personalized Content Feed**
-- 📱 **Mobile-First & Fully Responsive Design**
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
----
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## 🏗️ Architecture Overview
+## Deploy on Vercel
 
-```text
-User
- ↓
-Next.js Frontend
- ↓
-REST / WebSocket APIs
- ↓
-Renaissance Backend (Stellar Blockchain + Services)
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
