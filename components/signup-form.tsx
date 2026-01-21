@@ -128,19 +128,13 @@ export default function SignupForm() {
                     className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                   >
                     I agree to the{" "}
-                    <Link
-                      href="#"
-                      className="text-primary underline underline-offset-4"
-                    >
+                    <span className="text-primary underline underline-offset-4">
                       terms of service
-                    </Link>{" "}
+                    </span>{" "}
                     and{" "}
-                    <Link
-                      href="#"
-                      className="text-primary underline underline-offset-4"
-                    >
+                    <span className="text-primary underline underline-offset-4">
                       privacy policy
-                    </Link>
+                    </span>
                   </label>
                 </div>
               </div>
