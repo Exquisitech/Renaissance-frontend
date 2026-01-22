@@ -1,257 +1,240 @@
-"use client";
+"use client"
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-
-type Tab = "players" | "teams";
-
-interface SearchResult {
-  id: string;
-  name: string;
-  info: string;
-  github?: string;
-  assignee: string;
-  address: string;
-  date: string;
-  basePoints: number;
-  penalty: number;
-  activity: number;
-  total: number;
-}
-
-const mockPlayers: SearchResult[] = [
-  {
-    id: "p1",
-    name: "Bukayo Saka",
-    info: "Player information coming soon",
-    github: "https://github.com",
-    assignee: "Karu12099",
-    address: "0xe3...",
-    date: "Jan 21, 2026, 10:00 AM",
-    basePoints: 100,
-    penalty: 0,
-    activity: 100,
-    total: 200,
-  },
-  {
-    id: "p2",
-    name: "Martin Odegaard",
-    info: "Player information coming soon",
-    github: "https://github.com",
-    assignee: "Karu12099",
-    address: "0xf4...",
-    date: "Jan 20, 2026, 09:30 AM",
-    basePoints: 120,
-    penalty: 5,
-    activity: 95,
-    total: 210,
-  },
-  {
-    id: "p3",
-    name: "Declan Rice",
-    info: "Player information coming soon",
-    github: "https://github.com",
-    assignee: "Karu12099",
-    address: "0xa1...",
-    date: "Jan 19, 2026, 11:00 AM",
-    basePoints: 90,
-    penalty: 0,
-    activity: 110,
-    total: 200,
-  },
-];
-
-const mockTeams: SearchResult[] = [
-  {
-    id: "t1",
-    name: "Arsenal",
-    info: "Team information coming soon",
-    github: "https://github.com",
-    assignee: "Karu12099",
-    address: "0xe3...",
-    date: "Jan 21, 2026, 10:00 AM",
-    basePoints: 100,
-    penalty: 0,
-    activity: 100,
-    total: 200,
-  },
-  {
-    id: "t2",
-    name: "Manchester City",
-    info: "Team information coming soon",
-    github: "https://github.com",
-    assignee: "Karu12099",
-    address: "0xb2...",
-    date: "Jan 18, 2026, 02:00 PM",
-    basePoints: 150,
-    penalty: 10,
-    activity: 80,
-    total: 220,
-  },
-  {
-    id: "t3",
-    name: "Liverpool",
-    info: "Team information coming soon",
-    github: "https://github.com",
-    assignee: "Karu12099",
-    address: "0xc5...",
-    date: "Jan 17, 2026, 04:30 PM",
-    basePoints: 110,
-    penalty: 5,
-    activity: 105,
-    total: 210,
-  },
-];
-
-const TABS: { key: Tab; label: string }[] = [
-  { key: "players", label: "Players" },
-  { key: "teams", label: "Teams" },
-];
+import { useState } from "react"
+import Link from "next/link"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardFooter } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Calendar, Home, Search, Settings, User } from "lucide-react"
+import { Separator } from "@/components/ui/separator"
+import { Header } from "@/app/header"
+import { usePlayerSearch } from "@/hooks/use-players-search"
+import { useTeamSearch } from "@/hooks/use-teams-search"
 
 export default function SearchPage() {
-  const [activeTab, setActiveTab] = useState<Tab>("players");
-  const [query, setQuery] = useState("");
-
-  const dataSource = activeTab === "players" ? mockPlayers : mockTeams;
-
-  const results = query.trim()
-    ? dataSource.filter((item) =>
-        item.name.toLowerCase().includes(query.trim().toLowerCase())
-      )
-    : [];
-
-  const showEmpty = query.trim() && results.length === 0;
-  const showResults = results.length > 0;
+  const [searchQuery, setSearchQuery] = useState("Rodri")
+  const [activeTab, setActiveTab] = useState("players")
+  const { players, isLoading: playersLoading } = usePlayerSearch(searchQuery)
+  const { teams, isLoading: teamsLoading } = useTeamSearch(searchQuery)
 
   return (
-    <main className="min-h-screen bg-background px-6 py-8">
-      <div className="max-w-3xl mx-auto">
-        <h1 className="text-2xl font-bold mb-6">Search</h1>
+    <div className="flex min-h-screen flex-col">
+      <Header />
 
-        <div className="flex items-center gap-2 mb-6">
-          <input
-            type="text"
-            placeholder="Search players or teams"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            className="flex-1 h-9 sm:h-10 px-3 text-sm rounded-md bg-secondary border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
-          />
-          <Button>Search</Button>
-        </div>
+      <div className="container grid flex-1 gap-12 md:grid-cols-[200px_1fr] lg:grid-cols-[250px_1fr] py-6">
+        <aside className="hidden md:block">
+          <nav className="grid items-start gap-2">
+            <Link href="/dashboard">
+              <Button variant="ghost" className="w-full justify-start gap-2">
+                <Home className="h-4 w-4" />
+                Dashboard
+              </Button>
+            </Link>
+            <Link href="/matches">
+              <Button variant="ghost" className="w-full justify-start gap-2">
+                <Calendar className="h-4 w-4" />
+                Matches
+              </Button>
+            </Link>
+            <Link href="/search">
+              <Button variant="ghost" className="w-full justify-start gap-2 bg-muted">
+                <Search className="h-4 w-4" />
+                Search
+              </Button>
+            </Link>
+            <Link href="/profile">
+              <Button variant="ghost" className="w-full justify-start gap-2">
+                <User className="h-4 w-4" />
+                Profile
+              </Button>
+            </Link>
+            <Link href="/settings">
+              <Button variant="ghost" className="w-full justify-start gap-2">
+                <Settings className="h-4 w-4" />
+                Settings
+              </Button>
+            </Link>
 
-        <div className="inline-flex gap-1 p-1 rounded-lg bg-muted/50 mb-6">
-          {TABS.map((tab) => (
-            <button
-              key={tab.key}
-              onClick={() => setActiveTab(tab.key)}
-              className={`px-4 py-1.5 text-sm font-medium rounded-md transition-colors ${
-                activeTab === tab.key
-                  ? "bg-secondary text-foreground"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              {tab.label}
-            </button>
-          ))}
-        </div>
+            <Separator className="my-4" />
 
-        {!query.trim() && (
-          <p className="text-muted-foreground text-center py-12">
-            Type to search {activeTab}
-          </p>
-        )}
+            <div className="px-3 py-2">
+              <h3 className="mb-2 text-sm font-medium">Your Teams</h3>
+              <div className="space-y-2">
+                <Link
+                  href="/team/arsenal"
+                  className="flex items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-muted"
+                >
+                  <img src="/placeholder.svg?height=24&width=24" alt="Arsenal" className="h-6 w-6 rounded-full" />
+                  Arsenal
+                </Link>
+                <Link
+                  href="/team/barcelona"
+                  className="flex items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-muted"
+                >
+                  <img src="/placeholder.svg?height=24&width=24" alt="Barcelona" className="h-6 w-6 rounded-full" />
+                  Barcelona
+                </Link>
+                <Link
+                  href="/team/juventus"
+                  className="flex items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-muted"
+                >
+                  <img src="/placeholder.svg?height=24&width=24" alt="Juventus" className="h-6 w-6 rounded-full" />
+                  Juventus
+                </Link>
+              </div>
+            </div>
+          </nav>
+        </aside>
 
-        {showEmpty && (
-          <p className="text-muted-foreground text-center py-12">
-            No {activeTab} found
-          </p>
-        )}
-
-        {showResults && (
-          <div className="space-y-4">
-            {results.map((item) => (
-              <article
-                key={item.id}
-                className="flex flex-col md:flex-row rounded-lg bg-card border border-border overflow-hidden"
-              >
-                <div className="flex flex-1 gap-3 sm:gap-4 p-3 sm:p-4 items-start">
-                  <div className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 rounded-md bg-muted flex items-center justify-center shrink-0">
-                    <div className="w-12 h-12 sm:w-16 sm:h-16 lg:w-20 lg:h-20 rounded bg-primary/90 flex items-center justify-center">
-                      <span className="text-primary-foreground text-xl sm:text-2xl lg:text-3xl font-bold select-none">
-                        {item.name.charAt(0)}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="min-w-0 pt-1">
-                    <h2 className="text-xl sm:text-2xl font-bold leading-tight">
-                      {item.name}
-                    </h2>
-                    <p className="text-sm text-muted-foreground mt-2">
-                      {item.info}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="hidden md:block w-px bg-border my-3" />
-                <div className="md:hidden h-px bg-border mx-3" />
-
-                <aside className="w-full md:w-48 p-3 sm:p-4 text-sm">
-                  {item.github && (
-                    <a
-                      href={item.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-blue-400 hover:underline text-xs mb-3 block"
-                    >
-                      View on GitHub
-                    </a>
-                  )}
-
-                  <div className="grid grid-cols-2 gap-2 md:grid-cols-1 md:space-y-2 md:gap-0">
-                    <div>
-                      <p className="text-[10px] text-muted-foreground uppercase tracking-wider">
-                        Assigned/Applicants
-                      </p>
-                      <p className="text-foreground">{item.assignee}</p>
-                    </div>
-
-                    <div>
-                      <p className="text-[10px] text-muted-foreground uppercase tracking-wider">
-                        Address
-                      </p>
-                      <p className="text-foreground font-mono text-xs">
-                        {item.address}
-                      </p>
-                    </div>
-
-                    <p className="text-foreground text-xs col-span-2 md:col-span-1">{item.date}</p>
-                  </div>
-
-                  <div className="border-t border-border mt-3 pt-3 grid grid-cols-2 gap-1 md:grid-cols-1 md:space-y-1 md:gap-0">
-                    <div className="flex justify-between text-xs">
-                      <span className="text-muted-foreground">Base Points</span>
-                      <span>{item.basePoints}</span>
-                    </div>
-                    <div className="flex justify-between text-xs">
-                      <span className="text-muted-foreground">Penalty</span>
-                      <span>{item.penalty}</span>
-                    </div>
-                    <div className="flex justify-between text-xs">
-                      <span className="text-muted-foreground">Activity</span>
-                      <span>{item.activity}</span>
-                    </div>
-                    <div className="flex justify-between font-bold text-sm pt-1 col-span-2 md:col-span-1">
-                      <span>Total</span>
-                      <span>{item.total}</span>
-                    </div>
-                  </div>
-                </aside>
-              </article>
-            ))}
+        <main className="space-y-6">
+          <div className="flex flex-col gap-4">
+            <h1 className="text-3xl font-bold">Search</h1>
+            <div className="flex w-full items-center space-x-2">
+              <Input
+                type="search"
+                placeholder="Search players or clubs..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="max-w-md"
+              />
+              <Button type="submit">Search</Button>
+            </div>
           </div>
-        )}
+
+          <Tabs defaultValue="players" value={activeTab} onValueChange={setActiveTab}>
+            <TabsList>
+              <TabsTrigger value="players">Players</TabsTrigger>
+              <TabsTrigger value="teams">Teams</TabsTrigger>
+            </TabsList>
+            <TabsContent value="players" className="space-y-4 mt-4">
+              {playersLoading ? (
+                <div className="text-center py-8 text-muted-foreground">Searching players...</div>
+              ) : players.length > 0 ? (
+                players.map((playerResult) => (
+                  <Card key={playerResult.player.id}>
+                    <CardContent className="p-6">
+                      <div className="flex flex-col md:flex-row gap-6">
+                        <div className="flex flex-col items-center md:items-start gap-2">
+                          <img
+                            src={playerResult.player.photo || "/placeholder.svg"}
+                            alt={playerResult.player.name}
+                            className="h-32 w-32 rounded-lg object-cover"
+                          />
+                          <div className="text-center md:text-left">
+                            <h2 className="text-2xl font-bold">{playerResult.player.name}</h2>
+                            {playerResult.statistics?.[0] && (
+                              <p className="text-muted-foreground">{playerResult.statistics[0].team.name}</p>
+                            )}
+                          </div>
+                        </div>
+
+                        <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <h3 className="text-lg font-semibold mb-2">Player Info</h3>
+                            <div className="space-y-1">
+                              <div className="flex justify-between">
+                                <span className="text-muted-foreground">Age:</span>
+                                <span>{playerResult.player.age}</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span className="text-muted-foreground">Nationality:</span>
+                                <span>{playerResult.player.nationality}</span>
+                              </div>
+                              {playerResult.statistics?.[0] && (
+                                <>
+                                  <div className="flex justify-between">
+                                    <span className="text-muted-foreground">Position:</span>
+                                    <span>{playerResult.statistics[0].games?.position}</span>
+                                  </div>
+                                  <div className="flex justify-between">
+                                    <span className="text-muted-foreground">Appearances:</span>
+                                    <span>{playerResult.statistics[0].games?.appearences}</span>
+                                  </div>
+                                </>
+                              )}
+                            </div>
+                          </div>
+
+                          {playerResult.statistics?.[0] && (
+                            <div>
+                              <h3 className="text-lg font-semibold mb-2">Season Stats</h3>
+                              <div className="space-y-1">
+                                <div className="flex justify-between">
+                                  <span className="text-muted-foreground">Goals:</span>
+                                  <span>{playerResult.statistics[0].goals?.total || 0}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span className="text-muted-foreground">Assists:</span>
+                                  <span>{playerResult.statistics[0].goals?.assists || 0}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span className="text-muted-foreground">Pass Accuracy:</span>
+                                  <span>{playerResult.statistics[0].passes?.accuracy || "N/A"}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span className="text-muted-foreground">Tackles:</span>
+                                  <span>{playerResult.statistics[0].tackles?.total || 0}</span>
+                                </div>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </CardContent>
+                    <CardFooter>
+                      <Button variant="outline" className="w-full bg-transparent">
+                        View Full Profile
+                      </Button>
+                    </CardFooter>
+                  </Card>
+                ))
+              ) : (
+                <div className="text-center py-8 text-muted-foreground">
+                  {searchQuery ? "No players found" : "Start searching for players"}
+                </div>
+              )}
+            </TabsContent>
+            <TabsContent value="teams" className="space-y-4 mt-4">
+              {teamsLoading ? (
+                <div className="text-center py-8 text-muted-foreground">Searching teams...</div>
+              ) : teams.length > 0 ? (
+                teams.map((team) => (
+                  <Card key={team.id}>
+                    <CardContent className="p-6">
+                      <div className="flex flex-col md:flex-row gap-6">
+                        <div className="flex flex-col items-center md:items-start gap-2">
+                          <img
+                            src={team.crest || "/placeholder.svg"}
+                            alt={team.name}
+                            className="h-32 w-32 rounded-lg object-cover"
+                          />
+                          <div className="text-center md:text-left">
+                            <h2 className="text-2xl font-bold">{team.name}</h2>
+                          </div>
+                        </div>
+
+                        <div className="flex-1">
+                          <p className="text-muted-foreground">Team information coming soon</p>
+                        </div>
+                      </div>
+                    </CardContent>
+                    <CardFooter>
+                      <Button variant="outline" className="w-full bg-transparent">
+                        View Team Profile
+                      </Button>
+                    </CardFooter>
+                  </Card>
+                ))
+              ) : (
+                <div className="text-center py-8 text-muted-foreground">
+                  {searchQuery ? "No teams found" : "Start searching for teams"}
+                </div>
+              )}
+            </TabsContent>
+          </Tabs>
+        </main>
       </div>
-    </main>
-  );
+    </div>
+  )
 }
