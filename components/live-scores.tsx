@@ -258,7 +258,7 @@ export default function LiveScoresPage() {
 
           // Simulate minute progression
           let newMinute = match.minute + 1;
-          let newStatus = match.status;
+          let newStatus: LiveMatch["status"] = match.status;
 
           if (newMinute === 45 && match.status === "live") {
             newStatus = "halftime";
@@ -328,7 +328,7 @@ export default function LiveScoresPage() {
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
-        <Card className="mb-6 bg-gradient-to-r from-primary/10 to-accent/10 border-primary/20">
+        <Card className="mb-6 bg-linear-to-r from-primary/10 to-accent/10 border-primary/20">
           <CardHeader className="pb-2">
             <CardTitle className="text-lg flex items-center gap-2">
               <span>📡</span>
