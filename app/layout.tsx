@@ -1,5 +1,6 @@
 import "./globals.css";
 import { ReactNode } from "react";
+import { ThemeProvider } from "@/components/theme-provider";
 
 export const metadata = {
   title: "Renaissance",
@@ -8,9 +9,11 @@ export const metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" suppressHydrationWarning>
       <body className="bg-background text-foreground">
-        {children}
+        <ThemeProvider defaultTheme="dark" storageKey="renaissance-theme">
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );
