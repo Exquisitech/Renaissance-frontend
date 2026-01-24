@@ -2,9 +2,10 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { RenaissanceLogo } from "./renaissance-logo";
-import { Button } from "./ui/button";
-import { Menu, X, Moon, Sun } from "lucide-react";
+import { RenaissanceLogo } from "@/components/renaissance-logo";
+import { ThemeToggle } from "@/components/theme-toggle";
+import { Button } from "@/components/ui/button";
+import { Menu, X } from "lucide-react";
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -14,23 +15,20 @@ const navLinks = [
   { href: "/contact", label: "Contact" },
 ];
 
-export function Header() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [theme, setTheme] = useState<"dark" | "light">("dark");
+interface HeaderProps {
+  showAuthButtons?: boolean;
+}
 
-  const toggleTheme = () => {
-    const newTheme = theme === "dark" ? "light" : "dark";
-    setTheme(newTheme);
-    document.documentElement.classList.toggle("dark");
-  };
+export function Header({ showAuthButtons = false }: HeaderProps) {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2">
-            <RenaissanceLogo className="h-10 w-10" />
+          <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+            <RenaissanceLogo className="h-8 w-8" />
             <span className="text-xl font-bold">Renaissance</span>
           </Link>
 
@@ -47,20 +45,20 @@ export function Header() {
             ))}
           </nav>
 
-          {/* Theme Toggle & Mobile Menu Button */}
+          {/* Theme Toggle, Auth Buttons & Mobile Menu */}
           <div className="flex items-center gap-2">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={toggleTheme}
-              aria-label="Toggle theme"
-            >
-              {theme === "dark" ? (
-                <Sun className="h-5 w-5" />
-              ) : (
-                <Moon className="h-5 w-5" />
-              )}
-            </Button>
+            <ThemeToggle />
+
+            {showAuthButtons && (
+              <div className="hidden md:flex items-center gap-2 ml-2">
+                <Button variant="ghost" asChild>
+                  <Link href="/login">Log In</Link>
+                </Button>
+                <Button asChild>
+                  <Link href="/signup">Sign Up</Link>
+                </Button>
+              </div>
+            )}
 
             <Button
               variant="ghost"
@@ -92,6 +90,16 @@ export function Header() {
                   {link.label}
                 </Link>
               ))}
+              {showAuthButtons && (
+                <div className="flex flex-col gap-2 pt-2 border-t">
+                  <Button variant="ghost" asChild>
+                    <Link href="/login">Log In</Link>
+                  </Button>
+                  <Button asChild>
+                    <Link href="/signup">Sign Up</Link>
+                  </Button>
+                </div>
+              )}
             </div>
           </nav>
         )}
