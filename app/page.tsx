@@ -22,7 +22,7 @@ export default function Home() {
             </Button>
           </Link>
         </div>
-        <PlayerLifestyleNews/>
+       
       </main>
     </div>
   );
