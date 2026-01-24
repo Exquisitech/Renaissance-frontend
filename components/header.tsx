@@ -75,35 +75,39 @@ export function Header({ showAuthButtons = false }: HeaderProps) {
             </Button>
           </div>
         </div>
-
-        {/* Mobile Navigation */}
-        {mobileMenuOpen && (
-          <nav className="md:hidden py-4 border-t border-border">
-            <div className="flex flex-col gap-4">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className="text-sm font-medium transition-colors hover:text-primary"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {link.label}
-                </Link>
-              ))}
-              {showAuthButtons && (
-                <div className="flex flex-col gap-2 pt-2 border-t">
-                  <Button variant="ghost" asChild>
-                    <Link href="/login">Log In</Link>
-                  </Button>
-                  <Button asChild>
-                    <Link href="/signup">Sign Up</Link>
-                  </Button>
-                </div>
-              )}
-            </div>
-          </nav>
-        )}
       </div>
+
+      {/* Mobile Navigation - Absolute positioned */}
+      <nav
+        className={`absolute left-0 right-0 md:hidden overflow-hidden bg-background border-b transition-all duration-300 ease-in-out ${
+          mobileMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0 border-b-0'
+        }`}
+      >
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex flex-col gap-4">
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="text-sm font-medium transition-colors hover:text-primary"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                {link.label}
+              </Link>
+            ))}
+            {showAuthButtons && (
+              <div className="flex flex-col gap-2 pt-2 border-t">
+                <Button variant="ghost" asChild>
+                  <Link href="/login">Log In</Link>
+                </Button>
+                <Button asChild>
+                  <Link href="/signup">Sign Up</Link>
+                </Button>
+              </div>
+            )}
+          </div>
+        </div>
+      </nav>
     </header>
   );
 }
