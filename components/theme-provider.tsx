@@ -79,11 +79,6 @@ export function ThemeProvider({
     [theme]
   );
 
-  // Prevent flash of wrong theme
-  if (!mounted) {
-    return <>{children}</>;
-  }
-
   return (
     <ThemeProviderContext.Provider value={value}>
       {children}
