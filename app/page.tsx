@@ -1,8 +1,6 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Header } from "@/components/header";
-import HomeClient from "./home-client";
-import { PlayerLifestyleNews } from "@/components/player-lifestyle-new";
 
 export default function Home() {
   return (
@@ -22,7 +20,6 @@ export default function Home() {
             </Button>
           </Link>
         </div>
-       
       </main>
     </div>
   );
