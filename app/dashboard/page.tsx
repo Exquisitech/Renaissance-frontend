@@ -29,7 +29,7 @@ export default function DashboardPage() {
               <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
               <div className="flex items-center gap-2">
                 <div className="bg-secondary/50 px-3 py-1 rounded-full text-sm font-medium border">
-                  Balance: 100.00 STRK
+                  Balance: 100.00 XLM
                 </div>
                 <Button variant="outline">Upgrade to Premium</Button>
               </div>
