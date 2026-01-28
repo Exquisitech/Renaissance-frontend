@@ -39,7 +39,7 @@ const navItems: NavItem[] = [
     icon: Search,
   },
   {
-    title: "Stake STRK",
+    title: "Stake XLM",
     href: "/dashboard/stake",
     icon: Coins,
   },
