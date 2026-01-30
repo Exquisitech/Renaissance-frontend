@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { MOCK_TEAMS, Team, LEAGUES } from "@/lib/mock-data";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { LeagueFilter } from "@/components/league-filter";
 
 export function TeamSelector() {
     const [selectedTeamIds, setSelectedTeamIds] = React.useState<string[]>([]);
@@ -72,24 +73,12 @@ export function TeamSelector() {
                     />
                 </div>
 
-                {/* League Tabs */}
-                <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none">
-                    {LEAGUES.map((league) => (
-                        <button
-                            key={league}
-                            onClick={() => setActiveLeague(league)}
-                            className={cn(
-                                "px-4 py-1.5 rounded-full text-sm font-medium transition-colors whitespace-nowrap",
-                                activeLeague === league
-                                    ? "text-white"
-                                    : "text-muted-foreground hover:text-white",
-                                league === "England" && "border border-white/20"
-                            )}
-                        >
-                            {league}
-                        </button>
-                    ))}
-                </div>
+                {/* League Filter Component */}
+                <LeagueFilter
+                    value={activeLeague}
+                    onValueChange={setActiveLeague}
+                    variant="tabs"
+                />
 
                 {/* Team List */}
                 <div className="space-y-2">
