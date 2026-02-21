@@ -52,7 +52,7 @@ export default function StakePage() {
   const { toast } = useToast();
   const [selectedMatch, setSelectedMatch] = useState<Match | null>(null);
   const [selectedTeam, setSelectedTeam] = useState<"home" | "away" | null>(
-    null
+    null,
   );
   const [stakeAmount, setStakeAmount] = useState<number>(0.1);
   const [confidence, setConfidence] = useState<number>(50);
@@ -177,13 +177,13 @@ export default function StakePage() {
       const prediction = await getPrediction(
         selectedMatch.homeTeam.name,
         selectedMatch.awayTeam.name,
-        selectedMatch.competition
+        selectedMatch.competition,
       );
       setAiPrediction(prediction);
     } catch (error) {
       console.error("Error getting prediction:", error);
       setPredictionError(
-        "AI prediction service is currently unavailable. Please try again later."
+        "AI prediction service is currently unavailable. Please try again later.",
       );
       toast({
         title: "Prediction Error",
@@ -469,7 +469,7 @@ export default function StakePage() {
                               value={stakeAmount}
                               onChange={(e) =>
                                 setStakeAmount(
-                                  Number.parseFloat(e.target.value) || 0
+                                  Number.parseFloat(e.target.value) || 0,
                                 )
                               }
                             />
