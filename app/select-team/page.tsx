@@ -136,8 +136,8 @@ export default function SelectTeamsPage() {
         <div className="container flex min-h-screen w-full flex-col items-center justify-center py-10 mx-auto px-4">
             <Link href="/" className="fixed left-4 top-4 md:left-8 md:top-8">
                 <Button variant="ghost" className="flex items-center gap-2">
-                    <RenaissanceLogo className="h-6 w-6" />
-                    <span className="font-bold">Renaissance</span>
+                    <RenaissanceLogo className="h-8 w-8" />
+                    <span className="font-bold tracking-[0.22em]">RENAISSANCE</span>
                 </Button>
             </Link>
             <div className="mx-auto flex w-full flex-col justify-center space-y-6 max-w-4xl">

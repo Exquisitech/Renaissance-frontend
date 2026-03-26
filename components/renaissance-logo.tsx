@@ -1,45 +1,61 @@
 interface RenaissanceLogoProps {
-  className?: string
+  className?: string;
 }
 
 export function RenaissanceLogo({ className }: RenaissanceLogoProps) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 100 100"
+      viewBox="0 0 128 128"
       className={className}
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
+      aria-label="Renaissance logo"
+      role="img"
     >
-      {/* Football/Soccer ball */}
-      <circle cx="50" cy="50" r="35" className="fill-background stroke-foreground" />
+      <defs>
+        <linearGradient id="renaissance-ring" x1="18" y1="16" x2="108" y2="110">
+          <stop offset="0%" stopColor="#2C78FF" />
+          <stop offset="55%" stopColor="#27A4F1" />
+          <stop offset="100%" stopColor="#19D3D8" />
+        </linearGradient>
+        <linearGradient id="renaissance-panel" x1="34" y1="30" x2="90" y2="96">
+          <stop offset="0%" stopColor="#53B8FF" />
+          <stop offset="100%" stopColor="#28C8D7" />
+        </linearGradient>
+      </defs>
 
-      {/* Pentagon patterns on the ball */}
-      <path d="M50,15 L70,30 L65,55 L35,55 L30,30 Z" className="fill-none" />
-      <path d="M30,30 L15,50 L30,70 L50,65 L50,55 Z" className="fill-none" />
-      <path d="M70,30 L85,50 L70,70 L50,65 L50,55 Z" className="fill-none" />
-      <path d="M30,70 L50,85 L70,70 L50,65 Z" className="fill-none" />
+      <g
+        fill="none"
+        stroke="url(#renaissance-ring)"
+        strokeWidth="6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <circle cx="64" cy="64" r="33" />
+        <circle cx="64" cy="18" r="5" />
+        <circle cx="64" cy="110" r="5" />
+        <circle cx="18" cy="64" r="5" />
+        <circle cx="110" cy="64" r="5" />
+        <circle cx="31.5" cy="31.5" r="5" />
+        <circle cx="96.5" cy="31.5" r="5" />
+        <circle cx="31.5" cy="96.5" r="5" />
+        <circle cx="96.5" cy="96.5" r="5" />
+        <path d="M64 24v7" />
+        <path d="M64 97v7" />
+        <path d="M24 64h7" />
+        <path d="M97 64h7" />
+        <path d="M35.5 35.5l5 5" />
+        <path d="M92.5 92.5l-5-5" />
+        <path d="M92.5 35.5l-5 5" />
+        <path d="M35.5 92.5l5-5" />
+      </g>
 
-      {/* Renaissance star symbol overlay */}
-      <path
-        d="M50,35 L55,45 L65,45 L57,53 L60,63 L50,57 L40,63 L43,53 L35,45 L45,45 Z"
-        className="fill-none stroke-primary"
-      />
-
-      {/* Blockchain elements */}
-      <circle cx="30" cy="40" r="3" className="fill-primary stroke-none" />
-      <circle cx="70" cy="40" r="3" className="fill-primary stroke-none" />
-      <circle cx="40" cy="70" r="3" className="fill-primary stroke-none" />
-      <circle cx="60" cy="70" r="3" className="fill-primary stroke-none" />
-
-      {/* Connecting lines representing blockchain */}
-      <path d="M30,40 L40,70" className="stroke-primary stroke-[1.5]" />
-      <path d="M70,40 L60,70" className="stroke-primary stroke-[1.5]" />
-      <path d="M30,40 L70,40" className="stroke-primary stroke-[1.5]" />
-      <path d="M40,70 L60,70" className="stroke-primary stroke-[1.5]" />
+      <circle cx="64" cy="64" r="27" fill="#0B0F17" />
+      <polygon points="64,43 74,49 72,61 64,65 56,61 54,49" fill="#111827" />
+      <polygon points="49,51 56,61 53,75 40,75 35,61 40,50" fill="url(#renaissance-panel)" />
+      <polygon points="79,50 93,61 88,75 75,75 72,61 74,49" fill="#5AAEF9" />
+      <polygon points="56,77 72,77 78,91 64,99 50,91" fill="#34C8D8" />
+      <polygon points="42,39 54,33 58,45 50,55 38,50" fill="#2E9BEF" />
+      <polygon points="70,45 74,33 86,39 90,50 78,55" fill="#5FB5FF" />
     </svg>
-  )
+  );
 }
