@@ -14,8 +14,8 @@ export function Header({ showAuthButtons = false }: HeaderProps) {
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-14 max-w-screen-2xl items-center gap-4 px-4 md:px-6">
         <div className="flex items-center gap-2">
-          <RenaissanceLogo className="h-6 w-6" />
-          <span className="text-lg font-bold">Renaissance</span>
+          <RenaissanceLogo className="h-8 w-8" />
+          <span className="text-lg font-bold tracking-[0.22em]">RENAISSANCE</span>
         </div>
         <nav className="hidden md:flex flex-1 gap-6">
           <Link href="#features" className="text-sm font-medium hover:text-primary transition-colors">

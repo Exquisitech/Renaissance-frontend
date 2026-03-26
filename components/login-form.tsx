@@ -26,8 +26,8 @@ export default function LoginPage() {
     <div className="container flex h-screen w-screen flex-col items-center justify-center">
       <Link href="/" className="absolute left-4 top-4 md:left-8 md:top-8">
         <Button variant="ghost" className="flex items-center gap-2">
-          <RenaissanceLogo className="h-6 w-6" />
-          <span className="font-bold">Renaissance</span>
+          <RenaissanceLogo className="h-8 w-8" />
+          <span className="font-bold tracking-[0.22em]">RENAISSANCE</span>
         </Button>
       </Link>
       <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-87.5">
