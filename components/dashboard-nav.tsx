@@ -6,11 +6,9 @@ import {
   LayoutDashboard,
   CalendarDays,
   Search,
-  Coins,
-  Images,
+  Newspaper,
   User,
   Settings,
-  LogOut,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -39,14 +37,9 @@ const navItems: NavItem[] = [
     icon: Search,
   },
   {
-    title: "Stake XLM",
-    href: "/dashboard/stake",
-    icon: Coins,
-  },
-  {
-    title: "NFT Cards",
-    href: "/dashboard/nft-cards",
-    icon: Images,
+    title: "Lifestyle",
+    href: "/dashboard/lifestyle",
+    icon: Newspaper,
   },
   {
     title: "Profile",
@@ -69,15 +62,16 @@ export function DashboardNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="flex flex-col h-full w-64 border-r bg-card text-card-foreground p-4 hidden md:flex">
+    <nav className="flex h-full w-72 flex-col bg-[#040b18] p-4 text-white">
       <div className="flex flex-col gap-2">
         {navItems.map((item) => (
           <Button
             key={item.href}
             variant={pathname === item.href ? "secondary" : "ghost"}
             className={cn(
-              "justify-start gap-2",
-              pathname === item.href && "bg-secondary",
+              "h-11 justify-start gap-3 rounded-xl px-4 text-base font-semibold text-white hover:bg-white/6 hover:text-white",
+              pathname === item.href &&
+                "bg-[#202b3f] text-white hover:bg-[#202b3f]",
             )}
             asChild
           >
@@ -89,10 +83,10 @@ export function DashboardNav() {
         ))}
       </div>
 
-      <Separator className="my-4" />
+      <Separator className="my-8 bg-white/10" />
 
       <div className="flex flex-col gap-4">
-        <span className="text-sm font-semibold px-2 text-muted-foreground">
+        <span className="px-3 text-sm font-semibold text-white">
           Your Teams
         </span>
         <div className="flex flex-col gap-2">
@@ -100,9 +94,9 @@ export function DashboardNav() {
             <Button
               key={team.name}
               variant="ghost"
-              className="justify-start gap-2"
+              className="h-11 justify-start gap-3 rounded-xl px-4 text-base font-medium text-white hover:bg-white/6 hover:text-white"
             >
-              <div className={cn("h-4 w-4 rounded-full", team.color)} />
+              <div className={cn("h-5 w-5 rounded-full", team.color)} />
               {team.name}
             </Button>
           ))}
