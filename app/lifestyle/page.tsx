@@ -244,6 +244,6 @@ export default function LifestylePage() {
           </Tabs>
         </main>
       </div>
-    </div>
+    </div>//hide
   )
 }
