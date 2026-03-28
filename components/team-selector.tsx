@@ -12,7 +12,7 @@ export function TeamSelector() {
     const [selectedTeamIds, setSelectedTeamIds] = React.useState<string[]>([]);
     const [searchQuery, setSearchQuery] = React.useState("");
     const [activeLeague, setActiveLeague] = React.useState<string>(LEAGUES[0]);
-
+//  premium: true,
     const toggleTeam = (teamId: string) => {
         setSelectedTeamIds((prev) => {
             if (prev.includes(teamId)) {

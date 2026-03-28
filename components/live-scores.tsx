@@ -12,6 +12,7 @@ interface LiveMatch {
   homeScore: number;
   awayScore: number;
   minute: number;
+  //  premium: true,
   status: "live" | "halftime" | "finished";
   competition: string;
   homeLogo: string;

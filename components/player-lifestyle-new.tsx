@@ -12,7 +12,8 @@ export const playerLifestyleNews = [
     image: "/placeholder.svg?height=320&width=520",
     isPremium: true,
   },
-  {
+  { 
+    // premium: true,
     id: 2,
     title: "Rodri opens up on why he plays with tucked in shirt",
     preview:
