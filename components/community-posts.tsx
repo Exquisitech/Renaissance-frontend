@@ -13,7 +13,8 @@ const posts = [
     excerpt:
       "Discover the off-pitch discipline and recovery habits behind Rodri's remarkable consistency this season.",
     audience: "player",
-    premium: true,
+    // premium: true,
+     premium: true,
   },
 ];
 
