@@ -28,7 +28,7 @@ export function useCommunityPosts(
   limit: number = 10
 ) {
   const { data, error, isLoading, mutate } = useSWR<PostsResponse>(
-    /api/community-posts?category=${category}&page=${page}&limit=${limit},
+    `/api/community-posts?category=${category}&page=${page}&limit=${limit}`,
     async (url) => {
       const res = await fetch(url)
       if (!res.ok) throw new Error("Failed to fetch posts")
@@ -53,7 +53,9 @@ export function useCommunityPosts(
 
 export function usePostRewards(postId: string, userId: string) {
   const { data, error, isLoading } = useSWR(
-    postId && userId ? /api/community-posts/rewards?postId=${postId}&userId=${userId} : null,
+    postId && userId
+      ? `/api/community-posts/rewards?postId=${postId}&userId=${userId}`
+      : null,
     async (url) => {
       const res = await fetch(url)
       if (!res.ok) throw new Error("Failed to fetch rewards")

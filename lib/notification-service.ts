@@ -1,4 +1,4 @@
-import { v4 as uuidv4 } from 'crypto';
+import { randomUUID } from 'crypto';
 
 export type NotificationType = 'player_news' | 'social_interaction' | 'reward' | 'match_update';
 
@@ -49,10 +49,10 @@ export function createPlayerNewsNotification(
   data: PlayerNewsData
 ): Notification {
   return {
-    id: uuidv4(),
+    id: randomUUID(),
     userId,
     type: 'player_news',
-    title: ${playerName} News,
+    title: `${playerName} News`,
     message: newsTitle,
     relatedId: data.playerId,
     data,
@@ -70,11 +70,11 @@ export function createSocialInteractionNotification(
 ): Notification {
   const actionText = data.interactionType === 'upvote' ? 'upvoted' : 'commented on';
   return {
-    id: uuidv4(),
+    id: randomUUID(),
     userId,
     type: 'social_interaction',
-    title: New ${data.interactionType},
-    message: ${interactedByUser} ${actionText} your post "${postTitle}",
+    title: `New ${data.interactionType}`,
+    message: `${interactedByUser} ${actionText} your post "${postTitle}"`,
     relatedId: data.postId,
     data,
     read: false,
@@ -93,17 +93,17 @@ export function createRewardNotification(
 
   if (rewardType === 'spin_win') {
     title = 'Spin-to-Win Prize!';
-    message = You won ${data.prize}!;
+    message = `You won ${data.prize}!`;
   } else if (rewardType === 'rank_up') {
     title = 'Rank Up!';
-    message = Congratulations! You reached rank ${data.newRank};
+    message = `Congratulations! You reached rank ${data.newRank}`;
   } else if (rewardType === 'staking_reward') {
     title = 'Staking Reward';
-    message = You earned ${data.amount} XLM from staking;
+    message = `You earned ${data.amount} XLM from staking`;
   }
 
   return {
-    id: uuidv4(),
+    id: randomUUID(),
     userId,
     type: 'reward',
     title,
@@ -126,23 +126,23 @@ export function createMatchUpdateNotification(
 
   if (eventType === 'goal') {
     title = 'Goal Scored!';
-    message = ${teams}: ${data.score};
+    message = `${teams}: ${data.score}`;
   } else if (eventType === 'card') {
     title = 'Card Alert';
-    message = ${teams} - Card issued;
+    message = `${teams} - Card issued`;
   } else if (eventType === 'match_start') {
     title = 'Match Started';
-    message = ${teams} - Match has begun;
+    message = `${teams} - Match has begun`;
   } else if (eventType === 'match_end') {
     title = 'Match Ended';
-    message = ${teams} - Final score: ${data.score};
+    message = `${teams} - Final score: ${data.score}`;
   } else if (eventType === 'substitution') {
     title = 'Substitution';
-    message = ${teams} - Player substitution;
+    message = `${teams} - Player substitution`;
   }
 
   return {
-    id: uuidv4(),
+    id: randomUUID(),
     userId,
     type: 'match_update',
     title,

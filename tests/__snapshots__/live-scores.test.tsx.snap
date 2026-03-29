@@ -1,0 +1,651 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`live scores > renders loading state then followed matches 1`] = `
+<div
+  class="min-h-screen bg-background"
+>
+  <header
+    class="sticky top-0 z-50 backdrop-blur-lg bg-background/80 border-b border-border/50"
+  >
+    <div
+      class="container mx-auto px-4 py-4"
+    >
+      <div
+        class="flex items-center justify-between"
+      >
+        <a
+          href="/"
+        >
+          <button
+            class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50 h-9 px-4 py-2 has-[>svg]:px-3 gap-2"
+            data-size="default"
+            data-slot="button"
+            data-variant="ghost"
+          >
+            <svg
+              fill="none"
+              height="20"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="m12 19-7-7 7-7"
+              />
+              <path
+                d="M19 12H5"
+              />
+            </svg>
+            Back
+          </button>
+        </a>
+        <h1
+          class="text-xl font-bold"
+        >
+          ⚽ Live Scores
+        </h1>
+        <div
+          class="w-20"
+        />
+      </div>
+    </div>
+  </header>
+  <main
+    class="container mx-auto px-4 py-8"
+  >
+    <div
+      class="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm mb-6 bg-linear-to-r from-primary/10 to-accent/10 border-primary/20"
+      data-slot="card"
+    >
+      <div
+        class="@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start gap-2 px-6 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-6 pb-2"
+        data-slot="card-header"
+      >
+        <div
+          class="font-semibold text-lg flex items-center gap-2"
+          data-slot="card-title"
+        >
+          <span>
+            📡
+          </span>
+          Live Updates
+        </div>
+      </div>
+      <div
+        class="px-6 pt-0"
+        data-slot="card-content"
+      >
+        <p
+          class="text-sm text-muted-foreground"
+        >
+          Scores refresh automatically every 30 seconds. Last updated:
+           
+          <span
+            class="font-medium text-foreground"
+          >
+            13:00:01
+          </span>
+        </p>
+      </div>
+    </div>
+    <div
+      class="mb-4 flex items-center justify-between"
+    >
+      <h2
+        class="text-lg font-semibold"
+      >
+        Your Followed Teams
+      </h2>
+      <span
+        class="text-sm text-muted-foreground"
+      >
+        5
+         match
+        es
+      </span>
+    </div>
+    <div
+      class="space-y-4"
+    >
+      <div
+        class="text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm overflow-hidden hover:border-primary/50 transition-colors duration-300 bg-card/50 backdrop-blur-sm border-border/50"
+        data-slot="card"
+      >
+        <div
+          class="p-4"
+          data-slot="card-content"
+        >
+          <div
+            class="text-xs text-muted-foreground mb-3 text-center"
+          >
+            Premier League
+          </div>
+          <div
+            class="flex items-center justify-between gap-4"
+          >
+            <div
+              class="flex-1 flex items-center gap-3"
+            >
+              <span
+                class="text-2xl"
+              >
+                🔴
+              </span>
+              <div>
+                <p
+                  class="font-semibold text-primary"
+                >
+                  Manchester United
+                </p>
+                <span
+                  class="text-xs text-primary/70"
+                >
+                  Following
+                </span>
+              </div>
+            </div>
+            <div
+              class="flex flex-col items-center gap-2 px-4"
+            >
+              <div
+                class="flex items-center gap-2 text-2xl font-bold"
+              >
+                <span
+                  class="text-primary"
+                >
+                  2
+                </span>
+                <span
+                  class="text-muted-foreground"
+                >
+                  -
+                </span>
+                <span
+                  class="text-primary"
+                >
+                  1
+                </span>
+              </div>
+              <div
+                class="flex flex-col items-center gap-1"
+              >
+                <span
+                  class="inline-flex items-center gap-1.5 text-xs font-medium text-red-500"
+                >
+                  <span
+                    class="relative flex h-2 w-2"
+                  >
+                    <span
+                      class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"
+                    />
+                    <span
+                      class="relative inline-flex rounded-full h-2 w-2 bg-red-500"
+                    />
+                  </span>
+                  LIVE
+                </span>
+                <span
+                  class="text-sm font-semibold text-muted-foreground"
+                >
+                  67
+                  '
+                </span>
+              </div>
+            </div>
+            <div
+              class="flex-1 flex items-center justify-end gap-3"
+            >
+              <div
+                class="text-right"
+              >
+                <p
+                  class="font-semibold text-foreground"
+                >
+                  Chelsea
+                </p>
+              </div>
+              <span
+                class="text-2xl"
+              >
+                🔵
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm overflow-hidden hover:border-primary/50 transition-colors duration-300 bg-card/50 backdrop-blur-sm border-border/50"
+        data-slot="card"
+      >
+        <div
+          class="p-4"
+          data-slot="card-content"
+        >
+          <div
+            class="text-xs text-muted-foreground mb-3 text-center"
+          >
+            La Liga
+          </div>
+          <div
+            class="flex items-center justify-between gap-4"
+          >
+            <div
+              class="flex-1 flex items-center gap-3"
+            >
+              <span
+                class="text-2xl"
+              >
+                ⚪
+              </span>
+              <div>
+                <p
+                  class="font-semibold text-primary"
+                >
+                  Real Madrid
+                </p>
+                <span
+                  class="text-xs text-primary/70"
+                >
+                  Following
+                </span>
+              </div>
+            </div>
+            <div
+              class="flex flex-col items-center gap-2 px-4"
+            >
+              <div
+                class="flex items-center gap-2 text-2xl font-bold"
+              >
+                <span
+                  class=""
+                >
+                  1
+                </span>
+                <span
+                  class="text-muted-foreground"
+                >
+                  -
+                </span>
+                <span
+                  class=""
+                >
+                  1
+                </span>
+              </div>
+              <span
+                class="text-xs font-medium px-2 py-1 rounded bg-yellow-500/20 text-yellow-500"
+              >
+                HT
+              </span>
+            </div>
+            <div
+              class="flex-1 flex items-center justify-end gap-3"
+            >
+              <div
+                class="text-right"
+              >
+                <p
+                  class="font-semibold text-foreground"
+                >
+                  Atletico Madrid
+                </p>
+              </div>
+              <span
+                class="text-2xl"
+              >
+                🔴
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm overflow-hidden hover:border-primary/50 transition-colors duration-300 bg-card/50 backdrop-blur-sm border-border/50"
+        data-slot="card"
+      >
+        <div
+          class="p-4"
+          data-slot="card-content"
+        >
+          <div
+            class="text-xs text-muted-foreground mb-3 text-center"
+          >
+            Premier League
+          </div>
+          <div
+            class="flex items-center justify-between gap-4"
+          >
+            <div
+              class="flex-1 flex items-center gap-3"
+            >
+              <span
+                class="text-2xl"
+              >
+                🔴
+              </span>
+              <div>
+                <p
+                  class="font-semibold text-primary"
+                >
+                  Liverpool
+                </p>
+                <span
+                  class="text-xs text-primary/70"
+                >
+                  Following
+                </span>
+              </div>
+            </div>
+            <div
+              class="flex flex-col items-center gap-2 px-4"
+            >
+              <div
+                class="flex items-center gap-2 text-2xl font-bold"
+              >
+                <span
+                  class="text-primary"
+                >
+                  3
+                </span>
+                <span
+                  class="text-muted-foreground"
+                >
+                  -
+                </span>
+                <span
+                  class="text-primary"
+                >
+                  2
+                </span>
+              </div>
+              <div
+                class="flex flex-col items-center gap-1"
+              >
+                <span
+                  class="inline-flex items-center gap-1.5 text-xs font-medium text-red-500"
+                >
+                  <span
+                    class="relative flex h-2 w-2"
+                  >
+                    <span
+                      class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"
+                    />
+                    <span
+                      class="relative inline-flex rounded-full h-2 w-2 bg-red-500"
+                    />
+                  </span>
+                  LIVE
+                </span>
+                <span
+                  class="text-sm font-semibold text-muted-foreground"
+                >
+                  82
+                  '
+                </span>
+              </div>
+            </div>
+            <div
+              class="flex-1 flex items-center justify-end gap-3"
+            >
+              <div
+                class="text-right"
+              >
+                <p
+                  class="font-semibold text-foreground"
+                >
+                  Manchester City
+                </p>
+              </div>
+              <span
+                class="text-2xl"
+              >
+                🔵
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm overflow-hidden hover:border-primary/50 transition-colors duration-300 bg-card/50 backdrop-blur-sm border-border/50"
+        data-slot="card"
+      >
+        <div
+          class="p-4"
+          data-slot="card-content"
+        >
+          <div
+            class="text-xs text-muted-foreground mb-3 text-center"
+          >
+            La Liga
+          </div>
+          <div
+            class="flex items-center justify-between gap-4"
+          >
+            <div
+              class="flex-1 flex items-center gap-3"
+            >
+              <span
+                class="text-2xl"
+              >
+                🔵
+              </span>
+              <div>
+                <p
+                  class="font-semibold text-primary"
+                >
+                  Barcelona
+                </p>
+                <span
+                  class="text-xs text-primary/70"
+                >
+                  Following
+                </span>
+              </div>
+            </div>
+            <div
+              class="flex flex-col items-center gap-2 px-4"
+            >
+              <div
+                class="flex items-center gap-2 text-2xl font-bold"
+              >
+                <span
+                  class=""
+                >
+                  4
+                </span>
+                <span
+                  class="text-muted-foreground"
+                >
+                  -
+                </span>
+                <span
+                  class=""
+                >
+                  0
+                </span>
+              </div>
+              <span
+                class="text-xs font-medium px-2 py-1 rounded bg-muted text-muted-foreground"
+              >
+                FT
+              </span>
+            </div>
+            <div
+              class="flex-1 flex items-center justify-end gap-3"
+            >
+              <div
+                class="text-right"
+              >
+                <p
+                  class="font-semibold text-foreground"
+                >
+                  Sevilla
+                </p>
+              </div>
+              <span
+                class="text-2xl"
+              >
+                ⚪
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm overflow-hidden hover:border-primary/50 transition-colors duration-300 bg-card/50 backdrop-blur-sm border-border/50"
+        data-slot="card"
+      >
+        <div
+          class="p-4"
+          data-slot="card-content"
+        >
+          <div
+            class="text-xs text-muted-foreground mb-3 text-center"
+          >
+            Bundesliga
+          </div>
+          <div
+            class="flex items-center justify-between gap-4"
+          >
+            <div
+              class="flex-1 flex items-center gap-3"
+            >
+              <span
+                class="text-2xl"
+              >
+                🟡
+              </span>
+              <div>
+                <p
+                  class="font-semibold text-foreground"
+                >
+                  Borussia Dortmund
+                </p>
+              </div>
+            </div>
+            <div
+              class="flex flex-col items-center gap-2 px-4"
+            >
+              <div
+                class="flex items-center gap-2 text-2xl font-bold"
+              >
+                <span
+                  class="text-primary"
+                >
+                  0
+                </span>
+                <span
+                  class="text-muted-foreground"
+                >
+                  -
+                </span>
+                <span
+                  class="text-primary"
+                >
+                  2
+                </span>
+              </div>
+              <div
+                class="flex flex-col items-center gap-1"
+              >
+                <span
+                  class="inline-flex items-center gap-1.5 text-xs font-medium text-red-500"
+                >
+                  <span
+                    class="relative flex h-2 w-2"
+                  >
+                    <span
+                      class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"
+                    />
+                    <span
+                      class="relative inline-flex rounded-full h-2 w-2 bg-red-500"
+                    />
+                  </span>
+                  LIVE
+                </span>
+                <span
+                  class="text-sm font-semibold text-muted-foreground"
+                >
+                  34
+                  '
+                </span>
+              </div>
+            </div>
+            <div
+              class="flex-1 flex items-center justify-end gap-3"
+            >
+              <div
+                class="text-right"
+              >
+                <p
+                  class="font-semibold text-primary"
+                >
+                  Bayern Munich
+                </p>
+                <span
+                  class="text-xs text-primary/70"
+                >
+                  Following
+                </span>
+              </div>
+              <span
+                class="text-2xl"
+              >
+                🔴
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm mt-8 bg-card/30 border-border/30"
+      data-slot="card"
+    >
+      <div
+        class="p-4"
+        data-slot="card-content"
+      >
+        <p
+          class="text-sm text-muted-foreground mb-2"
+        >
+          Currently following:
+        </p>
+        <div
+          class="flex flex-wrap gap-2"
+        >
+          <span
+            class="px-3 py-1 text-xs font-medium rounded-full bg-primary/10 text-primary border border-primary/20"
+          >
+            Manchester United
+          </span>
+          <span
+            class="px-3 py-1 text-xs font-medium rounded-full bg-primary/10 text-primary border border-primary/20"
+          >
+            Real Madrid
+          </span>
+          <span
+            class="px-3 py-1 text-xs font-medium rounded-full bg-primary/10 text-primary border border-primary/20"
+          >
+            Barcelona
+          </span>
+          <span
+            class="px-3 py-1 text-xs font-medium rounded-full bg-primary/10 text-primary border border-primary/20"
+          >
+            Liverpool
+          </span>
+          <span
+            class="px-3 py-1 text-xs font-medium rounded-full bg-primary/10 text-primary border border-primary/20"
+          >
+            Bayern Munich
+          </span>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+`;

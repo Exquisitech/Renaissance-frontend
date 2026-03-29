@@ -1,0 +1,149 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`content components > renders community posts with premium CTA 1`] = `
+<section
+  class="space-y-7"
+>
+  <div
+    class="space-y-2"
+  >
+    <h1
+      class="text-[2.85rem] leading-none font-bold tracking-tight text-white"
+    >
+      Community Posts
+    </h1>
+    <p
+      class="text-[1.05rem] text-[#8ea5c8]"
+    >
+      Share football insights and earn XLM rewards
+    </p>
+  </div>
+  <div
+    class="rounded-xl border border-[#d83535] bg-[#690909] px-6 py-6 shadow-[0_18px_45px_rgba(0,0,0,0.18)]"
+  >
+    <p
+      class="text-[1.05rem] text-white"
+    >
+      Upgrade to Premium to post lifestyle news and earn XLM rewards!
+    </p>
+    <button
+      class="inline-flex items-center justify-center gap-2 whitespace-nowrap transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border shadow-xs dark:bg-input/30 dark:border-input dark:hover:bg-input/50 py-2 has-[>svg]:px-3 mt-5 h-11 rounded-xl border-white/12 bg-[#071020] px-5 text-base font-semibold text-white hover:bg-[#0c1831] hover:text-white"
+      data-size="default"
+      data-slot="button"
+      data-variant="outline"
+    >
+      Upgrade Now
+    </button>
+  </div>
+  <div
+    class="inline-flex rounded-xl border border-white/8 bg-[#1c273c] p-1 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)]"
+  >
+    <button
+      class="rounded-lg bg-[#081225] px-4 py-2 text-sm font-semibold text-white"
+      type="button"
+    >
+      All Posts
+    </button>
+    <button
+      class="rounded-lg px-4 py-2 text-sm font-semibold text-[#93a8ca] transition-colors hover:text-white"
+      type="button"
+    >
+      Player Stories
+    </button>
+    <button
+      class="rounded-lg px-4 py-2 text-sm font-semibold text-[#93a8ca] transition-colors hover:text-white"
+      type="button"
+    >
+      Manager Insights
+    </button>
+    <button
+      class="rounded-lg px-4 py-2 text-sm font-semibold text-[#93a8ca] transition-colors hover:text-white"
+      type="button"
+    >
+      Lifestyle
+    </button>
+  </div>
+  <div
+    class="space-y-5"
+  >
+    <article
+      class="rounded-xl border border-white/12 bg-[#040b18] px-6 py-7 shadow-[0_18px_45px_rgba(0,0,0,0.14)]"
+    >
+      <div
+        class="flex items-start justify-between gap-4"
+      >
+        <div
+          class="flex items-center gap-4"
+        >
+          <div
+            class="flex h-11 w-11 items-center justify-center rounded-full bg-[radial-gradient(circle_at_top,#7d3cb4_0%,#3d2a8f_45%,#11172d_100%)] text-[#c5a5ff]"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-user h-5 w-5"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"
+              />
+              <circle
+                cx="12"
+                cy="7"
+                r="4"
+              />
+            </svg>
+          </div>
+          <div>
+            <div
+              class="text-[1.05rem] font-semibold text-white"
+            >
+              Football Insider
+            </div>
+            <div
+              class="text-sm text-[#8ea5c8]"
+            >
+              2 hours ago
+            </div>
+          </div>
+        </div>
+        <div
+          class="flex items-center gap-3"
+        >
+          <div
+            class="inline-flex items-center border transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent shadow rounded-full bg-[#ff3b30] px-3 py-1 text-sm font-medium text-black hover:bg-[#ff3b30]"
+          >
+            Premium
+          </div>
+          <div
+            class="inline-flex items-center transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow rounded-full border border-white/18 bg-transparent px-3 py-1 text-sm font-medium capitalize text-white hover:bg-transparent"
+          >
+            player
+          </div>
+        </div>
+      </div>
+      <div
+        class="mt-7 space-y-3"
+      >
+        <h2
+          class="text-[2rem] leading-tight font-semibold tracking-tight text-white"
+        >
+          Rodri's Secret Training Routine Revealed
+        </h2>
+        <p
+          class="max-w-3xl text-[1rem] leading-7 text-[#8ea5c8]"
+        >
+          Discover the off-pitch discipline and recovery habits behind Rodri's remarkable consistency this season.
+        </p>
+      </div>
+    </article>
+  </div>
+</section>
+`;
