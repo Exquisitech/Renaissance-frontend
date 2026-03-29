@@ -26,13 +26,13 @@ export function useNotifications(options: UseNotificationsOptions = {}) {
         ...(unreadOnly && { unreadOnly: 'true' }),
       });
 
-      const response = await fetch(/api/notifications?${params});
+      const response = await fetch(`/api/notifications?${params.toString()}`);
       if (!response.ok) {
         throw new Error('Failed to fetch notifications');
       }
 
       const result = await response.json();
-      if (result.success) {
+      if (result.success && result.data) {
         setNotifications(result.data.notifications);
         setUnreadCount(result.data.unreadCount);
       }
@@ -68,7 +68,7 @@ export function useNotifications(options: UseNotificationsOptions = {}) {
 
   const markAsRead = useCallback(async (notificationId: string) => {
     try {
-      const response = await fetch(/api/notifications/${notificationId}/read, {
+      const response = await fetch(`/api/notifications/${notificationId}/read`, {
         method: 'PATCH',
       });
 
@@ -85,7 +85,7 @@ export function useNotifications(options: UseNotificationsOptions = {}) {
 
   const deleteNotification = useCallback(async (notificationId: string) => {
     try {
-      const response = await fetch(/api/notifications/${notificationId}, {
+      const response = await fetch(`/api/notifications/${notificationId}`, {
         method: 'DELETE',
       });
 
@@ -124,3 +124,4 @@ export function useNotifications(options: UseNotificationsOptions = {}) {
     markAllAsRead,
     refresh: fetchNotifications,
   };
+}

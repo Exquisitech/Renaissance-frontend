@@ -1,0 +1,173 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`league filter and team selector > filters, selects up to three teams, and allows removal 1`] = `
+<div
+  class="grid grid-cols-1 lg:grid-cols-3 gap-8 h-full"
+>
+  <div
+    class="lg:col-span-2 space-y-6"
+  >
+    <div>
+      <h2
+        class="text-2xl font-normal tracking-tight"
+      >
+        Available Teams
+      </h2>
+      <p
+        class="text-muted-foreground"
+      >
+        Search and select your favorite teams
+      </p>
+    </div>
+    <div
+      class="relative"
+    >
+      <svg
+        aria-hidden="true"
+        class="lucide lucide-search absolute left-3 top-2.5 h-4 w-4 text-muted-foreground"
+        fill="none"
+        height="24"
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        viewBox="0 0 24 24"
+        width="24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="m21 21-4.34-4.34"
+        />
+        <circle
+          cx="11"
+          cy="11"
+          r="8"
+        />
+      </svg>
+      <input
+        class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground h-9 w-full min-w-0 px-3 py-1 text-base transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive pl-9 bg-transparent dark:bg-transparent border border-white/10 shadow-none focus-visible:ring-0 rounded-lg"
+        data-slot="input"
+        placeholder="Search teams..."
+        value="zzz"
+      />
+    </div>
+    <div
+      class="flex gap-2 overflow-x-auto pb-2 scrollbar-none"
+    >
+      <button
+        aria-label="Filter by Premier League"
+        aria-pressed="true"
+        class="px-4 py-1.5 rounded-full text-sm font-medium transition-colors whitespace-nowrap text-white"
+      >
+        Premier League
+      </button>
+      <button
+        aria-label="Filter by England"
+        aria-pressed="false"
+        class="px-4 py-1.5 rounded-full text-sm font-medium transition-colors whitespace-nowrap text-muted-foreground hover:text-white border border-white/20"
+      >
+        England
+      </button>
+    </div>
+    <div
+      class="space-y-2"
+    >
+      <div
+        class="text-center py-12 text-muted-foreground"
+      >
+        No teams found in 
+        Premier League
+      </div>
+    </div>
+  </div>
+  <div
+    class="lg:col-span-1 border-l border-border/10 pl-0 lg:pl-8 pt-8 lg:pt-0"
+  >
+    <div
+      class="sticky top-6 space-y-8"
+    >
+      <div>
+        <h2
+          class="text-2xl font-normal tracking-tight"
+        >
+          Selected Teams
+        </h2>
+        <p
+          class="text-sm font-medium mt-1 text-muted-foreground"
+        >
+          2
+          /3 teams selected
+        </p>
+      </div>
+      <div
+        class="space-y-4"
+      >
+        <div
+          class="flex items-center justify-between p-3 rounded-lg bg-secondary/10 hover:bg-secondary/20 transition-colors"
+        >
+          <div
+            class="flex items-center gap-3"
+          >
+            <div
+              class="h-10 w-10 rounded-full flex items-center justify-center ring-1 ring-white/10 bg-white"
+            />
+            <div>
+              <div
+                class="font-medium text-sm leading-none"
+              >
+                Chelsea
+              </div>
+              <div
+                class="text-xs text-muted-foreground mt-1"
+              >
+                Premier League
+              </div>
+            </div>
+          </div>
+          <button
+            class="text-xs text-white hover:text-white/80 transition-colors px-2 py-1 font-medium"
+          >
+            Remove
+          </button>
+        </div>
+        <div
+          class="flex items-center justify-between p-3 rounded-lg bg-secondary/10 hover:bg-secondary/20 transition-colors"
+        >
+          <div
+            class="flex items-center gap-3"
+          >
+            <div
+              class="h-10 w-10 rounded-full flex items-center justify-center ring-1 ring-white/10 bg-white"
+            />
+            <div>
+              <div
+                class="font-medium text-sm leading-none"
+              >
+                Liverpool
+              </div>
+              <div
+                class="text-xs text-muted-foreground mt-1"
+              >
+                Premier League
+              </div>
+            </div>
+          </div>
+          <button
+            class="text-xs text-white hover:text-white/80 transition-colors px-2 py-1 font-medium"
+          >
+            Remove
+          </button>
+        </div>
+      </div>
+      <button
+        class="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive px-4 py-2 has-[>svg]:px-3 w-full bg-[#FA6968] hover:bg-[#E55A59] text-black font-bold h-12 rounded-lg"
+        data-size="default"
+        data-slot="button"
+        data-variant="default"
+      >
+        Continue
+      </button>
+    </div>
+  </div>
+</div>
+`;

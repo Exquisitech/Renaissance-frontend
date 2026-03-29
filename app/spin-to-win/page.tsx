@@ -16,7 +16,7 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Calendar, Home, TrendingUp, CoinsIcon, Zap } from "lucide-react";
-import { useToast } from "@chakra-ui/react";
+import { useToast } from "@/hooks/use-toast";
 
 export default function SpinToWinPage() {
   const { toast } = useToast();
@@ -237,5 +237,53 @@ export default function SpinToWinPage() {
         </main>
       </div>
     </div>
+  );
+}
+
+function SpinWheel({
+  isSpinning,
+  lastWin,
+}: {
+  isSpinning: boolean;
+  lastWin: string | null;
+}) {
+  const segments = ["Player NFT", "2 XLM", "25 XLM", "0 XLM"];
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Prize Wheel</CardTitle>
+        <CardDescription>
+          {isSpinning ? "Drawing prize..." : "Spin for a chance to win"}
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <div
+          className={`grid aspect-square place-items-center rounded-full border-8 border-red-600/30 bg-radial from-red-600/20 to-background ${
+            isSpinning ? "animate-spin" : ""
+          }`}
+        >
+          <div className="grid grid-cols-2 gap-3 p-6 text-center text-sm font-semibold">
+            {segments.map((segment) => (
+              <div
+                key={segment}
+                className="rounded-lg border border-border/60 bg-background/80 px-3 py-5"
+              >
+                {segment}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="rounded-lg bg-muted p-4 text-center">
+          <p className="text-sm text-muted-foreground">Last result</p>
+          <p className="mt-1 text-lg font-semibold">{lastWin ?? "No spin yet"}</p>
+        </div>
+
+        <Badge variant="outline" className="w-full justify-center py-2">
+          Minimum spin: 10 XLM
+        </Badge>
+      </CardContent>
+    </Card>
   );
 }

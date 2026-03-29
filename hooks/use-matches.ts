@@ -34,7 +34,7 @@ const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
 export function useMatches(status: "LIVE" | "SCHEDULED" = "SCHEDULED", limit = 10) {
   const { data, error, isLoading } = useSWR<{ success: boolean; data: Match[] }>(
-    /api/matches?status=${status}&limit=${limit},
+    `/api/matches?status=${status}&limit=${limit}`,
     fetcher,
     {
       revalidateOnFocus: false,
