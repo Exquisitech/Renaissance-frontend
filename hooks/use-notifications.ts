@@ -32,7 +32,7 @@ export function useNotifications(options: UseNotificationsOptions = {}) {
       }
 
       const result = await response.json();
-      if (result.success) {
+      if (result.success && result.data) {
         setNotifications(result.data.notifications);
         setUnreadCount(result.data.unreadCount);
       }
