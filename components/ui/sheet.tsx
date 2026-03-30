@@ -14,7 +14,7 @@ export function Sheet({ children, open, onOpenChange }: SheetProps) {
 }
 
 export function SheetTrigger({ children, onClick }: { children: React.ReactNode; onClick?: () => void }) {
-  return React.cloneElement(children as React.ReactElement, { onClick })
+  return React.cloneElement(children as React.ReactElement<{ onClick?: () => void }>, { onClick })
 }
 
 export function SheetContent({ 

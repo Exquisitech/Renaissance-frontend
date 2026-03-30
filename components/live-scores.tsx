@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useOdds } from "@/hooks/use-odds";
+import type { OddsData } from "@/lib/odds-api-service";
 
 interface LiveMatch {
   id: string;
@@ -232,10 +234,74 @@ function EmptyState() {
   );
 }
 
+function getH2HOdds(event: OddsData) {
+  const bookmaker = event.bookmakers[0];
+  if (!bookmaker) return null;
+  const h2hMarket = bookmaker.markets.find((m) => m.key === "h2h");
+  if (!h2hMarket) return null;
+  return {
+    bookmakerTitle: bookmaker.title,
+    outcomes: h2hMarket.outcomes,
+  };
+}
+
+function OddsCard({ event }: { event: OddsData }) {
+  const h2h = getH2HOdds(event);
+  const kickoff = new Date(event.commence_time);
+  const homeOutcome = h2h?.outcomes.find((o) => o.name === event.home_team);
+  const awayOutcome = h2h?.outcomes.find((o) => o.name === event.away_team);
+  const drawOutcome = h2h?.outcomes.find((o) => o.name === "Draw");
+
+  return (
+    <Card className="overflow-hidden hover:border-primary/50 transition-colors duration-300 bg-card/50 backdrop-blur-sm border-border/50">
+      <CardContent className="p-4">
+        <div className="text-xs text-muted-foreground mb-3 text-center">
+          {event.sport_title} &middot;{" "}
+          {kickoff.toLocaleDateString()}{" "}
+          {kickoff.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+        </div>
+        <div className="flex items-center justify-between gap-4 mb-3">
+          <p className="flex-1 font-semibold text-foreground">{event.home_team}</p>
+          <span className="text-sm text-muted-foreground">vs</span>
+          <p className="flex-1 font-semibold text-foreground text-right">{event.away_team}</p>
+        </div>
+        {h2h && (
+          <div className="border-t border-border/30 pt-3">
+            <p className="text-xs text-muted-foreground mb-2 text-center">
+              Odds &middot; {h2h.bookmakerTitle}
+            </p>
+            <div className="grid grid-cols-3 gap-2">
+              <div className="flex flex-col items-center p-2 rounded bg-muted/30">
+                <span className="text-xs text-muted-foreground mb-1">Home</span>
+                <span className="font-semibold text-primary">
+                  {homeOutcome?.price ?? "—"}
+                </span>
+              </div>
+              <div className="flex flex-col items-center p-2 rounded bg-muted/30">
+                <span className="text-xs text-muted-foreground mb-1">Draw</span>
+                <span className="font-semibold text-foreground">
+                  {drawOutcome?.price ?? "—"}
+                </span>
+              </div>
+              <div className="flex flex-col items-center p-2 rounded bg-muted/30">
+                <span className="text-xs text-muted-foreground mb-1">Away</span>
+                <span className="font-semibold text-primary">
+                  {awayOutcome?.price ?? "—"}
+                </span>
+              </div>
+            </div>
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
+
 export default function LiveScoresPage() {
   const [matches, setMatches] = useState<LiveMatch[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
+  const { odds, isLoading: oddsLoading } = useOdds();
 
   // Simulate initial loading
   useEffect(() => {
@@ -388,6 +454,34 @@ export default function LiveScoresPage() {
             </div>
           </CardContent>
         </Card>
+
+        {/* Upcoming EPL Fixtures & Odds */}
+        <div className="mt-10">
+          <div className="mb-4 flex items-center justify-between">
+            <h2 className="text-lg font-semibold">Upcoming EPL Fixtures &amp; Odds</h2>
+            <span className="text-sm text-muted-foreground">
+              {odds.length} fixture{odds.length !== 1 ? "s" : ""}
+            </span>
+          </div>
+          <div className="space-y-4">
+            {oddsLoading ? (
+              <>
+                <MatchSkeleton />
+                <MatchSkeleton />
+              </>
+            ) : odds.length === 0 ? (
+              <Card className="bg-card/50 backdrop-blur-sm border-border/50">
+                <CardContent className="flex flex-col items-center justify-center py-8">
+                  <p className="text-sm text-muted-foreground">
+                    No upcoming fixtures available
+                  </p>
+                </CardContent>
+              </Card>
+            ) : (
+              odds.map((event) => <OddsCard key={event.id} event={event} />)
+            )}
+          </div>
+        </div>
       </main>
     </div>
   );

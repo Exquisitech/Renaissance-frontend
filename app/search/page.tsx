@@ -16,6 +16,7 @@ import { SavedSearchesPanel } from "@/components/saved-searches-panel"
 import { QuickFilters } from "@/components/saved-searches-panel"
 import { Badge } from "@/components/ui/badge"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { cn } from "@/lib/utils"
 
 export default function SearchPage() {
   const [searchQuery, setSearchQuery] = useState("")
@@ -179,15 +180,13 @@ export default function SearchPage() {
 
             {/* Search Bar with Suggestions */}
             <div className="relative">
-              <div className="flex w-full items-center space-x-2">
-                <Input
-                  type="search"
-                  placeholder="Search players or clubs..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="max-w-md"
-                />
-              </div>
+              <Input
+                type="search"
+                placeholder="Search players or clubs..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="max-w-md"
+              />
               {searchQuery && (
                 <div className="absolute top-full left-0 right-0 mt-1 max-w-md mx-auto">
                   <div className="rounded-md border bg-popover p-2 text-sm text-muted-foreground">
@@ -392,5 +391,4 @@ export default function SearchPage() {
       </div>
     </div>
   )
-}
 }
