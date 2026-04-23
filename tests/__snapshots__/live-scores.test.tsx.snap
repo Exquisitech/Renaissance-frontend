@@ -646,6 +646,112 @@ exports[`live scores > renders loading state then followed matches 1`] = `
         </div>
       </div>
     </div>
+    <div
+      class="mt-10"
+    >
+      <div
+        class="mb-4 flex items-center justify-between"
+      >
+        <h2
+          class="text-lg font-semibold"
+        >
+          Upcoming EPL Fixtures & Odds
+        </h2>
+        <span
+          class="text-sm text-muted-foreground"
+        >
+          0
+           fixture
+          s
+        </span>
+      </div>
+      <div
+        class="space-y-4"
+      >
+        <div
+          class="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm animate-pulse"
+          data-slot="card"
+        >
+          <div
+            class="p-4"
+            data-slot="card-content"
+          >
+            <div
+              class="flex items-center justify-between"
+            >
+              <div
+                class="flex-1"
+              >
+                <div
+                  class="h-4 bg-muted rounded w-24 mb-2"
+                />
+                <div
+                  class="h-6 bg-muted rounded w-32"
+                />
+              </div>
+              <div
+                class="px-4"
+              >
+                <div
+                  class="h-8 bg-muted rounded w-16"
+                />
+              </div>
+              <div
+                class="flex-1 text-right"
+              >
+                <div
+                  class="h-4 bg-muted rounded w-24 ml-auto mb-2"
+                />
+                <div
+                  class="h-6 bg-muted rounded w-32 ml-auto"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm animate-pulse"
+          data-slot="card"
+        >
+          <div
+            class="p-4"
+            data-slot="card-content"
+          >
+            <div
+              class="flex items-center justify-between"
+            >
+              <div
+                class="flex-1"
+              >
+                <div
+                  class="h-4 bg-muted rounded w-24 mb-2"
+                />
+                <div
+                  class="h-6 bg-muted rounded w-32"
+                />
+              </div>
+              <div
+                class="px-4"
+              >
+                <div
+                  class="h-8 bg-muted rounded w-16"
+                />
+              </div>
+              <div
+                class="flex-1 text-right"
+              >
+                <div
+                  class="h-4 bg-muted rounded w-24 ml-auto mb-2"
+                />
+                <div
+                  class="h-6 bg-muted rounded w-32 ml-auto"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </main>
 </div>
 `;

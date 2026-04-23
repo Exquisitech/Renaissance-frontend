@@ -406,7 +406,12 @@ export default function LiveScoresPage() {
             <p className="text-sm text-muted-foreground">
               Scores refresh automatically every 30 seconds. Last updated:{" "}
               <span className="font-medium text-foreground">
-                {lastUpdated.toLocaleTimeString()}
+                {lastUpdated.toLocaleTimeString("en-GB", {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  second: "2-digit",
+                  hour12: false,
+                })}
               </span>
             </p>
           </CardContent>
