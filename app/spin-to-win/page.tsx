@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Header } from "@/components/header";
+import { SpinSessionPanel } from "@/components/spin/SpinSessionPanel";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -16,7 +17,8 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Calendar, Home, TrendingUp, CoinsIcon, Zap } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { showApiErrorToast, useToast } from "@/hooks/use-toast";
+import { executeSpin, type SpinSession } from "@/lib/api/spin";
 
 export default function SpinToWinPage() {
   const { toast } = useToast();
@@ -24,6 +26,7 @@ export default function SpinToWinPage() {
   const [isSpinning, setIsSpinning] = useState(false);
   const [lastWin, setLastWin] = useState<string | null>(null);
   const [userBalance, setUserBalance] = useState(100); // Mock balance in XLM
+  const [session, setSession] = useState<SpinSession | null>(null);
 
   const handleSpin = async () => {
     if (stakeAmount < 10) {
@@ -44,38 +47,29 @@ export default function SpinToWinPage() {
       return;
     }
 
+    if (!session || session.status !== "active") {
+      toast({
+        title: session?.status === "expired" ? "Session expired" : "No active session",
+        description: "Start a new spin session before submitting the wheel.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsSpinning(true);
 
     try {
-      const response = await fetch("/api/spin-to-win", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ stakeAmount }),
-      });
+      const data = await executeSpin(session.sessionId, stakeAmount);
+      setLastWin(data.prize);
+      setUserBalance(data.newBalance);
+      setSession(data.session);
 
-      const data = await response.json();
-
-      if (data.success) {
-        setLastWin(data.prize);
-        setUserBalance(data.newBalance);
-
-        toast({
-          title: "Congratulations! 🎉",
-          description: `You won: ${data.prize}!`,
-        });
-      } else {
-        toast({
-          title: "Spin Failed",
-          description: data.error || "Something went wrong",
-          variant: "destructive",
-        });
-      }
-    } catch (error) {
       toast({
-        title: "Error",
-        description: "Failed to process spin",
-        variant: "destructive",
+        title: "Congratulations! 🎉",
+        description: `You won: ${data.prize}!`,
       });
+    } catch (error) {
+      showApiErrorToast(error, "Spin failed");
     } finally {
       setIsSpinning(false);
     }
@@ -221,15 +215,24 @@ export default function SpinToWinPage() {
                     <Button
                       className="w-full bg-red-600 hover:bg-red-700 text-lg h-12"
                       onClick={handleSpin}
-                      disabled={isSpinning}
+                      disabled={isSpinning || session?.status !== "active"}
                     >
-                      {isSpinning ? "Spinning..." : "SPIN TO WIN"}
+                      {isSpinning
+                        ? "Spinning..."
+                        : session?.status === "active"
+                          ? "SPIN TO WIN"
+                          : "START A SESSION TO SPIN"}
                     </Button>
                   </CardContent>
                 </Card>
               </div>
 
-              <div>
+              <div className="space-y-6">
+                <SpinSessionPanel
+                  stakeAmount={stakeAmount}
+                  session={session}
+                  onSessionChange={setSession}
+                />
                 <SpinWheel isSpinning={isSpinning} lastWin={lastWin} />
               </div>
             </div>

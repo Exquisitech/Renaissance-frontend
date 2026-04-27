@@ -1,4 +1,5 @@
 import type { NotificationType, Notification } from "@/lib/notification-service";
+import { apiRequest } from "@/lib/api/client";
 
 // ── Types ──────────────────────────────────────────────────────────────────────
 
@@ -56,9 +57,10 @@ export const DEFAULT_PREFERENCES: NotificationPreference[] = [
 export async function fetchNotificationPreferences(
   userId: string
 ): Promise<NotificationPreference[]> {
-  const res = await fetch(`/api/notifications/preferences?userId=${userId}`);
-  if (!res.ok) throw new Error("Failed to fetch notification preferences");
-  const data = await res.json();
+  const data = await apiRequest<NotificationPreferencesResponse>(
+    "/api/notifications/preferences",
+    { query: { userId } }
+  );
   return data.preferences ?? DEFAULT_PREFERENCES;
 }
 
@@ -66,36 +68,33 @@ export async function updateNotificationPreferences(
   userId: string,
   preferences: NotificationPreference[]
 ): Promise<void> {
-  const res = await fetch("/api/notifications/preferences", {
+  await apiRequest("/api/notifications/preferences", {
     method: "PUT",
-    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ userId, preferences }),
   });
-  if (!res.ok) throw new Error("Failed to update notification preferences");
 }
 
 export async function sendTestNotification(
   userId: string,
   type: NotificationType
 ): Promise<void> {
-  const res = await fetch("/api/notifications/test", {
+  await apiRequest("/api/notifications/test", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ userId, type }),
   });
-  if (!res.ok) throw new Error("Failed to send test notification");
 }
 
 export async function fetchNotifications(
   userId: string,
   opts: { unreadOnly?: boolean; limit?: number } = {}
 ): Promise<NotificationsListResponse> {
-  const params = new URLSearchParams({ userId });
-  if (opts.unreadOnly) params.set("unreadOnly", "true");
-  if (opts.limit) params.set("limit", String(opts.limit));
-  const res = await fetch(`/api/notifications?${params}`);
-  if (!res.ok) throw new Error("Failed to fetch notifications");
-  const data = await res.json();
+  const data = await apiRequest<{ data?: NotificationsListResponse }>("/api/notifications", {
+    query: {
+      userId,
+      unreadOnly: opts.unreadOnly,
+      limit: opts.limit,
+    },
+  });
   return data.data ?? { notifications: [], unreadCount: 0, total: 0 };
 }
 
@@ -103,19 +102,16 @@ export async function markNotificationRead(
   notificationId: string,
   read: boolean
 ): Promise<void> {
-  const res = await fetch(`/api/notifications/${notificationId}`, {
+  await apiRequest(`/api/notifications/${notificationId}`, {
     method: "PATCH",
-    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ read }),
   });
-  if (!res.ok) throw new Error("Failed to update notification");
 }
 
 export async function deleteNotification(
   notificationId: string
 ): Promise<void> {
-  const res = await fetch(`/api/notifications/${notificationId}`, {
+  await apiRequest(`/api/notifications/${notificationId}`, {
     method: "DELETE",
   });
-  if (!res.ok) throw new Error("Failed to delete notification");
 }
