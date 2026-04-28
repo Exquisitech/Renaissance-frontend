@@ -33,21 +33,9 @@ import { Slider } from "@/components/ui/slider";
 import { useToast } from "@/hooks/use-toast";
 import { getPrediction } from "@/lib/ai-service";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { UserTierBadge } from "@/components/profile/UserTierBadge";
-import { BetLimitWarning } from "@/components/bets/BetLimitWarning";
-import { useDisputeUpdates } from "@/hooks/use-dispute-updates";
-import {
-  bettingLimitsProfile,
-  formatLimitValue,
-  getRemainingLimit,
-} from "@/lib/betting-limits";
-import {
-  createDispute,
-  fetchSettledBets,
-  fetchUserDisputes,
-  type SettledBet,
-  type DisputeRecord,
-} from "@/lib/api/disputes";
+import { StakeForm } from "@/components/staking/StakeForm";
+import { StakePositionCard } from "@/components/staking/StakePositionCard";
+import { StakePosition, getUserStakes } from "@/lib/api/staking";
 
 type Match = {
   id: number;
@@ -77,16 +65,16 @@ export default function StakePage() {
   const [aiPrediction, setAiPrediction] = useState<string | null>(null);
   const [isLoadingPrediction, setIsLoadingPrediction] = useState(false);
   const [predictionError, setPredictionError] = useState<string | null>(null);
-  const [settledBets, setSettledBets] = useState<SettledBet[]>([]);
-  const [disputes, setDisputes] = useState<DisputeRecord[]>([]);
-  const [activeDisputeBet, setActiveDisputeBet] = useState<SettledBet | null>(null);
-  const [submittingDispute, setSubmittingDispute] = useState(false);
-  const dailyBetLimit = bettingLimitsProfile.limits[0];
-  const activeBetLimit = bettingLimitsProfile.limits[2];
-  const remainingDailyBetVolume = getRemainingLimit(
-    dailyBetLimit.used,
-    dailyBetLimit.max,
-  );
+  const [userStakes, setUserStakes] = useState<StakePosition[]>([]);
+
+  const loadUserStakes = async () => {
+    try {
+      const stakes = await getUserStakes();
+      setUserStakes(stakes);
+    } catch (error) {
+      console.error("Failed to load user stakes:", error);
+    }
+  };
 
   const upcomingMatches: Match[] = [
     {
@@ -557,200 +545,20 @@ export default function StakePage() {
 
                 <div>
                   {selectedMatch ? (
-                    <Card>
-                      <CardHeader>
-                        <CardTitle>Place Your Stake</CardTitle>
-                        <CardDescription>
-                          {selectedMatch.homeTeam.name} vs{" "}
-                          {selectedMatch.awayTeam.name}
-                        </CardDescription>
-                      </CardHeader>
-                      <CardContent className="space-y-4">
-                        <BetLimitWarning
-                          limit={dailyBetLimit}
-                          nextStake={stakeAmount}
-                        />
-                        <BetLimitWarning limit={activeBetLimit} />
-
-                        <div>
-                          <Label className="mb-2 block">
-                            Select Team to Win
-                          </Label>
-                          <div className="grid grid-cols-2 gap-4">
-                            <Card
-                              className={`cursor-pointer hover:border-primary transition-colors p-4 ${
-                                selectedTeam === "home"
-                                  ? "border-primary bg-muted"
-                                  : ""
-                              }`}
-                              onClick={() => handleTeamSelect("home")}
-                            >
-                              <div className="flex flex-col items-center gap-2">
-                                <img
-                                  src={
-                                    selectedMatch.homeTeam.logo ||
-                                    "/placeholder.svg"
-                                  }
-                                  alt={selectedMatch.homeTeam.name}
-                                  className="h-12 w-12"
-                                />
-                                <span className="font-medium">
-                                  {selectedMatch.homeTeam.name}
-                                </span>
-                                <Badge variant="outline">
-                                  Odds: {selectedMatch.homeTeam.odds.toFixed(2)}
-                                </Badge>
-                              </div>
-                            </Card>
-                            <Card
-                              className={`cursor-pointer hover:border-primary transition-colors p-4 ${
-                                selectedTeam === "away"
-                                  ? "border-primary bg-muted"
-                                  : ""
-                              }`}
-                              onClick={() => handleTeamSelect("away")}
-                            >
-                              <div className="flex flex-col items-center gap-2">
-                                <img
-                                  src={
-                                    selectedMatch.awayTeam.logo ||
-                                    "/placeholder.svg"
-                                  }
-                                  alt={selectedMatch.awayTeam.name}
-                                  className="h-12 w-12"
-                                />
-                                <span className="font-medium">
-                                  {selectedMatch.awayTeam.name}
-                                </span>
-                                <Badge variant="outline">
-                                  Odds: {selectedMatch.awayTeam.odds.toFixed(2)}
-                                </Badge>
-                              </div>
-                            </Card>
-                          </div>
-                        </div>
-
-                        <div className="space-y-2">
-                          <Label htmlFor="stake-amount">
-                            Stake Amount (STRK)
-                          </Label>
-                          <div className="flex items-center gap-2">
-                            <Input
-                              id="stake-amount"
-                              type="number"
-                              min="0.1"
-                              step="0.1"
-                              value={stakeAmount}
-                              onChange={(e) =>
-                                setStakeAmount(
-                                  Number.parseFloat(e.target.value) || 0,
-                                )
-                              }
-                            />
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => setStakeAmount(1)}
-                            >
-                              1 STRK
-                            </Button>
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => setStakeAmount(5)}
-                            >
-                              5 STRK
-                            </Button>
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => setStakeAmount(10)}
-                            >
-                              10 STRK
-                            </Button>
-                          </div>
-                        </div>
-
-                        <div className="space-y-2">
-                          <div className="flex items-center justify-between">
-                            <Label htmlFor="confidence">Your Confidence</Label>
-                            <span className="text-sm">{confidence}%</span>
-                          </div>
-                          <Slider
-                            id="confidence"
-                            min={0}
-                            max={100}
-                            step={1}
-                            value={[confidence]}
-                            onValueChange={(value) => setConfidence(value[0])}
-                          />
-                        </div>
-
-                        {selectedTeam && (
-                          <div className="rounded-lg bg-muted p-4">
-                            <div className="flex items-center justify-between">
-                              <span className="text-sm">Potential Reward:</span>
-                              <span className="font-bold">
-                                {calculatePotentialReward().toFixed(2)} STRK
-                              </span>
-                            </div>
-                          </div>
-                        )}
-
-                        <div className="pt-2">
-                          <Button
-                            className="w-full"
-                            disabled={!selectedTeam || stakeAmount <= 0}
-                            onClick={handleStakeSubmit}
-                          >
-                            Place Stake
-                          </Button>
-                        </div>
-
-                        <Separator />
-
-                        <div>
-                          <div className="flex items-center justify-between mb-2">
-                            <Label>Match Analysis</Label>
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => {
-                                // Use the fallback prediction instead of the AI API
-                                setAiPrediction(getFallbackPrediction());
-                              }}
-                              disabled={isLoadingPrediction}
-                            >
-                              {isLoadingPrediction
-                                ? "Loading..."
-                                : "Get Analysis"}
-                            </Button>
-                          </div>
-
-                          {predictionError && (
-                            <Alert variant="destructive" className="mb-4">
-                              <AlertCircle className="h-4 w-4" />
-                              <AlertTitle>Error</AlertTitle>
-                              <AlertDescription>
-                                {predictionError}
-                              </AlertDescription>
-                            </Alert>
-                          )}
-
-                          {aiPrediction ? (
-                            <div className="rounded-lg bg-muted p-4 text-sm">
-                              {aiPrediction}
-                            </div>
-                          ) : (
-                            <div className="rounded-lg border border-dashed p-4 text-center text-sm text-muted-foreground">
-                              {isLoadingPrediction
-                                ? "Analyzing match data..."
-                                : "Click to get a match analysis based on current form and odds"}
-                            </div>
-                          )}
-                        </div>
-                      </CardContent>
-                    </Card>
+                    <StakeForm
+                      matchId={selectedMatch.id}
+                      homeTeam={selectedMatch.homeTeam}
+                      awayTeam={selectedMatch.awayTeam}
+                      onStakePlaced={() => {
+                        toast({
+                          title: "Stake Placed Successfully!",
+                          description: `You've staked on ${
+                            selectedMatch.homeTeam.name
+                          } vs ${selectedMatch.awayTeam.name}`,
+                        });
+                        loadUserStakes();
+                      }}
+                    />
                   ) : (
                     <Card>
                       <CardContent className="p-8 text-center">
@@ -773,19 +581,36 @@ export default function StakePage() {
             </TabsContent>
 
             <TabsContent value="my-stakes" className="mt-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Your Active Stakes</CardTitle>
-                  <CardDescription>
-                    Track your current stakes and potential rewards
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-center py-8 text-muted-foreground">
-                    <p>You don't have any active stakes yet</p>
+              <div className="space-y-4">
+                <h2 className="text-xl font-semibold">Your Active Stakes</h2>
+                {userStakes.length > 0 ? (
+                  <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                    {userStakes.map((stake) => (
+                      <StakePositionCard
+                        key={stake.id}
+                        stake={stake}
+                        onCompound={() => loadUserStakes()}
+                      />
+                    ))}
                   </div>
-                </CardContent>
-              </Card>
+                ) : (
+                  <Card>
+                    <CardContent className="p-8 text-center">
+                      <div className="flex flex-col items-center justify-center space-y-4">
+                        <CoinsIcon className="h-12 w-12 text-muted-foreground" />
+                        <div>
+                          <h3 className="text-lg font-medium">
+                            No Active Stakes
+                          </h3>
+                          <p className="text-sm text-muted-foreground">
+                            Place your first stake to start earning with compound interest
+                          </p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+              </div>
             </TabsContent>
 
             <TabsContent value="completed" className="mt-6">
