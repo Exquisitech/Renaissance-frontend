@@ -30,24 +30,37 @@ function buildResolvedPath(path: string, values: Record<string, string>) {
 }
 
 function buildCodeSnippets(endpoint: ApiEndpointDoc, resolvedPath: string, authToken: string, bodyText: string) {
-  const bearerHeader = endpoint.authRequired
-    ? `\n  -H \"Authorization: Bearer ${authToken || "<jwt-token>"}\" \\\`
+  const token = authToken || "<jwt-token>"
+  const hasRequestBody = Boolean(endpoint.requestBody && endpoint.method !== "GET")
+  const compactBodyText = bodyText.replace(/\n/g, "")
+  const curlLines = [
+    `curl -X ${endpoint.method} "${resolvedPath}" \\`,
+    `  -H "Content-Type: application/json"${endpoint.authRequired || hasRequestBody ? " \\" : ""}`,
+    endpoint.authRequired ? `  -H "Authorization: Bearer ${token}"${hasRequestBody ? " \\" : ""}` : null,
+    hasRequestBody ? `  -d '${compactBodyText}'` : null,
+  ].filter(Boolean)
+
+  const javascriptHeaders = endpoint.authRequired
+    ? `    "Content-Type": "application/json",\n    "Authorization": "Bearer ${token}",`
+    : `    "Content-Type": "application/json",`
+  const javascriptBody = hasRequestBody
+    ? `,\n  body: JSON.stringify(${bodyText})`
     : ""
-  const curlBody = endpoint.requestBody && endpoint.method !== "GET"
-    ? `\n  -d '${bodyText.replace(/\n/g, "")} '
-`
+
+  const pythonHeaderEntries = endpoint.authRequired
+    ? `    "Authorization": "Bearer ${token}",\n    "Content-Type": "application/json",`
+    : `    "Content-Type": "application/json",`
+  const pythonJsonBlock = hasRequestBody
+    ? `,\n    json=${bodyText}`
     : ""
 
   return {
-    curl: `curl -X ${endpoint.method} \"${resolvedPath}\" \\
-  -H \"Content-Type: application/json\" \\\`${bearerHeader}${curlBody}`.replace(/\\`/g, ""),
+    curl: curlLines.join("\n"),
     javascript: `const response = await fetch("${resolvedPath}", {
   method: "${endpoint.method}",
   headers: {
-    "Content-Type": "application/json",${endpoint.authRequired ? `
-    Authorization: "Bearer ${authToken || "<jwt-token>"}",` : ""}
-  },${endpoint.requestBody && endpoint.method !== "GET" ? `
-  body: JSON.stringify(${bodyText}),` : ""}
+${javascriptHeaders}
+  }${javascriptBody}
 })
 
 const data = await response.json()`,
@@ -56,12 +69,32 @@ const data = await response.json()`,
 response = requests.request(
     "${endpoint.method}",
     "${resolvedPath}",
-    headers={${endpoint.authRequired ? `"Authorization": "Bearer ${authToken || "<jwt-token>"}, ` : ""}"Content-Type": "application/json"},${endpoint.requestBody && endpoint.method !== "GET" ? `
-    json=${bodyText},` : ""}
+    headers={
+${pythonHeaderEntries}
+    }${pythonJsonBlock}
 )
 
 print(response.json())`,
   }
+}
+
+async function formatResponsePayload(response: Response) {
+  const text = await response.text()
+
+  if (!text) {
+    return ""
+  }
+
+  const contentType = response.headers.get("content-type") ?? ""
+  if (contentType.includes("application/json")) {
+    try {
+      return JSON.stringify(JSON.parse(text), null, 2)
+    } catch {
+      return text
+    }
+  }
+
+  return text
 }
 
 export function EndpointCard({ endpoint, authToken }: EndpointCardProps) {
@@ -105,7 +138,7 @@ export function EndpointCard({ endpoint, authToken }: EndpointCardProps) {
         parseAs: "response",
       })
 
-      const payload = await response.text()
+      const payload = await formatResponsePayload(response)
       setStatus(response.status)
       setCorrelationId(extractCorrelationId(response.headers))
       setResult(payload)

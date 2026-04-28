@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { ArrowRightLeft, Gavel } from "lucide-react"
 import { DatabaseHealthCard } from "@/components/admin/DatabaseHealthCard"
 import { AllocationRuleList } from "@/components/admin/AllocationRuleList"
 import { MarketplaceFeeSettings } from "@/components/admin/MarketplaceFeeSettings"
@@ -35,6 +36,38 @@ export default function AdminDashboardPage() {
               <AllocationRuleList />
               <div className="space-y-6">
                 <MarketplaceFeeSettings />
+                <Card className="border-secondary/20 bg-card/70">
+                  <CardHeader>
+                    <CardTitle>Withdrawal queue</CardTitle>
+                    <CardDescription>
+                      Review pending payout requests, large withdrawals, and final settlement steps.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <Button asChild variant="outline" className="w-full">
+                      <Link href="/admin/withdrawals">
+                        <ArrowRightLeft className="h-4 w-4" />
+                        Open withdrawal review
+                      </Link>
+                    </Button>
+                  </CardContent>
+                </Card>
+                <Card className="border-secondary/20 bg-card/70">
+                  <CardHeader>
+                    <CardTitle>Dispute moderation</CardTitle>
+                    <CardDescription>
+                      Review match-result disputes, evidence uploads, and resolution notes.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <Button asChild variant="outline" className="w-full">
+                      <Link href="/admin/disputes">
+                        <Gavel className="h-4 w-4" />
+                        Open dispute queue
+                      </Link>
+                    </Button>
+                  </CardContent>
+                </Card>
                 <Card className="border-secondary/20 bg-card/70">
                   <CardHeader>
                     <CardTitle>Correlation-aware errors</CardTitle>
