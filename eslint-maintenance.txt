@@ -1,0 +1,49 @@
+
+C:\Users\a-abdulkareem\Documents\IMAMU\Renaissance-frontend\components\maintenance\MaintenanceBanner.tsx
+  23:10  warning  'now' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   @typescript-eslint/no-unused-vars
+  23:34  error    Error: Cannot call impure function during render
+
+`Date.now` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+C:\Users\a-abdulkareem\Documents\IMAMU\Renaissance-frontend\components\maintenance\MaintenanceBanner.tsx:23:34
+  21 | export function MaintenanceBanner({ status, isConnected, onDismiss }: MaintenanceBannerProps) {
+  22 |   const [dismissed, setDismissed] = useState(false)
+> 23 |   const [now, setNow] = useState(Date.now())
+     |                                  ^^^^^^^^^^ Cannot call impure function
+  24 |
+  25 |   useEffect(() => {
+  26 |     const timer = setInterval(() => setNow(Date.now()), 1000)  react-hooks/purity
+
+C:\Users\a-abdulkareem\Documents\IMAMU\Renaissance-frontend\components\maintenance\MaintenanceGate.tsx
+   8:10  warning  'cn' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     @typescript-eslint/no-unused-vars
+  61:10  warning  'now' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           @typescript-eslint/no-unused-vars
+  61:40  error    Error: Cannot call impure function during render
+
+`Date.now` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+C:\Users\a-abdulkareem\Documents\IMAMU\Renaissance-frontend\components\maintenance\MaintenanceGate.tsx:61:40
+  59 |
+  60 | function MaintenancePage({ window: maintWindow }: { window: MaintenanceStatusResponse["currentWindow"] }) {
+> 61 |   const [now, setNow] = React.useState(Date.now())
+     |                                        ^^^^^^^^^^ Cannot call impure function
+  62 |
+  63 |   React.useEffect(() => {
+  64 |     const timer = setInterval(() => setNow(Date.now()), 1000)  react-hooks/purity
+
+C:\Users\a-abdulkareem\Documents\IMAMU\Renaissance-frontend\components\maintenance\ScheduledMaintenance.tsx
+  191:10  warning  'now' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    @typescript-eslint/no-unused-vars
+  191:34  error    Error: Cannot call impure function during render
+
+`Date.now` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+C:\Users\a-abdulkareem\Documents\IMAMU\Renaissance-frontend\components\maintenance\ScheduledMaintenance.tsx:191:34
+  189 |   isUpcoming?: boolean
+  190 | }) {
+> 191 |   const [now, setNow] = useState(Date.now())
+      |                                  ^^^^^^^^^^ Cannot call impure function
+  192 |
+  193 |   useEffect(() => {
+  194 |     if (!isUpcoming) return  react-hooks/purity
+
+✖ 7 problems (3 errors, 4 warnings)
+

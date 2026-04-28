@@ -1,0 +1,12 @@
+
+C:\Users\a-abdulkareem\Documents\IMAMU\Renaissance-frontend\components\verification\AdminReviewQueue.tsx
+  60:6  warning  React Hook useEffect has a missing dependency: 'load'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Users\a-abdulkareem\Documents\IMAMU\Renaissance-frontend\components\verification\DocumentUploader.tsx
+  4:48  warning  'Check' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\a-abdulkareem\Documents\IMAMU\Renaissance-frontend\components\verification\KYCSteps.tsx
+  83:3  warning  'onStatusChange' is defined but never used  @typescript-eslint/no-unused-vars
+
+✖ 3 problems (0 errors, 3 warnings)
+

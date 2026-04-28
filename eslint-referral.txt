@@ -1,0 +1,10 @@
+
+C:\Users\a-abdulkareem\Documents\IMAMU\Renaissance-frontend\components\referral\ReferralCodeDisplay.tsx
+  10:10  warning  'cn' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\a-abdulkareem\Documents\IMAMU\Renaissance-frontend\components\referral\ReferralHistory.tsx
+   9:10  warning  'cn' is defined but never used                                                                           @typescript-eslint/no-unused-vars
+  80:6   warning  React Hook useEffect has a missing dependency: 'load'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+✖ 3 problems (0 errors, 3 warnings)
+
