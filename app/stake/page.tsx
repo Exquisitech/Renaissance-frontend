@@ -1,8 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { Header } from "@/app/header";
+import { CreateDisputeModal } from "@/components/disputes/CreateDisputeModal";
+import { DisputeList } from "@/components/disputes/DisputeList";
+import { DisputeStatusBadge } from "@/components/disputes/DisputeStatusBadge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -169,6 +172,18 @@ export default function StakePage() {
       return;
     }
 
+    if (stakeAmount > remainingDailyBetVolume) {
+      toast({
+        title: "Daily limit reached",
+        description: `Your remaining daily bet volume is ${formatLimitValue(
+          remainingDailyBetVolume,
+          "XLM",
+        )}. Reduce your stake or wait for the reset window.`,
+        variant: "destructive",
+      });
+      return;
+    }
+
     // In a real app, this would call a smart contract function
     toast({
       title: "Stake Placed Successfully!",
@@ -229,11 +244,64 @@ export default function StakePage() {
     return prediction;
   };
 
+  const loadDisputeData = useCallback(async () => {
+    const [bets, userDisputes] = await Promise.all([
+      fetchSettledBets("default-user"),
+      fetchUserDisputes("default-user"),
+    ]);
+    setSettledBets(bets);
+    setDisputes(userDisputes);
+  }, []);
+
+  useEffect(() => {
+    void loadDisputeData();
+  }, [loadDisputeData]);
+
+  const disputeTransport = useDisputeUpdates(() => {
+    void loadDisputeData();
+  });
+
+  const disputedBetIds = new Set(disputes.map((item) => item.betId));
+
   return (
     <div className="flex min-h-screen flex-col">
       <Header />
 
       <div className="container grid flex-1 gap-12 md:grid-cols-[200px_1fr] lg:grid-cols-[250px_1fr] py-6">
+        {activeDisputeBet ? (
+          <CreateDisputeModal
+            bet={activeDisputeBet}
+            open={Boolean(activeDisputeBet)}
+            submitting={submittingDispute}
+            onClose={() => setActiveDisputeBet(null)}
+            onSubmit={async (input) => {
+              setSubmittingDispute(true);
+              try {
+                await createDispute({
+                  userId: "default-user",
+                  betId: activeDisputeBet.id,
+                  ...input,
+                });
+                toast({
+                  title: "Dispute submitted",
+                  description:
+                    "Your dispute is now open and the moderation queue has been notified.",
+                });
+                setActiveDisputeBet(null);
+                await loadDisputeData();
+              } catch {
+                toast({
+                  title: "Dispute failed",
+                  description: "Unable to file your dispute right now.",
+                  variant: "destructive",
+                });
+              } finally {
+                setSubmittingDispute(false);
+              }
+            }}
+          />
+        ) : null}
+
         <aside className="hidden md:block">
           <nav className="grid items-start gap-2">
             <Link href="/dashboard">
@@ -327,7 +395,15 @@ export default function StakePage() {
 
         <main className="space-y-6">
           <div className="flex items-center justify-between">
-            <h1 className="text-3xl font-bold">Stake XLM on Matches</h1>
+            <div className="space-y-2">
+              <h1 className="text-3xl font-bold">Stake XLM on Matches</h1>
+              <div className="flex flex-wrap items-center gap-2">
+                <UserTierBadge tier={bettingLimitsProfile.tier} />
+                <Badge variant="outline" className="px-3 py-1 text-sm">
+                  Daily reset in {bettingLimitsProfile.dailyResetIn}
+                </Badge>
+              </div>
+            </div>
             <div className="flex items-center gap-2">
               <Badge variant="outline" className="px-3 py-1 text-sm">
                 <CoinsIcon className="h-4 w-4 mr-1" />
@@ -344,6 +420,73 @@ export default function StakePage() {
             </TabsList>
 
             <TabsContent value="upcoming" className="space-y-6 mt-6">
+              <div className="grid gap-4 lg:grid-cols-3">
+                <Card className="lg:col-span-2">
+                  <CardHeader>
+                    <CardTitle>Betting Limits</CardTitle>
+                    <CardDescription>
+                      Your current tier determines how much you can wager today.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="grid gap-4 md:grid-cols-3">
+                    {bettingLimitsProfile.limits.map((limit) => {
+                      const ratio = Math.min((limit.used / limit.max) * 100, 100);
+                      const remaining = getRemainingLimit(limit.used, limit.max);
+
+                      return (
+                        <div
+                          key={limit.label}
+                          className="rounded-xl border bg-muted/40 p-4"
+                        >
+                          <p className="text-sm font-medium">{limit.label}</p>
+                          <p className="mt-2 text-2xl font-semibold">
+                            {formatLimitValue(remaining, limit.unit)}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            Remaining of {formatLimitValue(limit.max, limit.unit)}
+                          </p>
+                          <div className="mt-3 h-2 overflow-hidden rounded-full bg-muted">
+                            <div
+                              className="h-full rounded-full bg-primary"
+                              style={{ width: `${ratio}%` }}
+                            />
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Tier Benefits</CardTitle>
+                    <CardDescription>
+                      Your Silver tier keeps higher limits unlocked for today.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <p className="text-sm text-muted-foreground">
+                      {bettingLimitsProfile.tierSubtitle}
+                    </p>
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between text-sm">
+                        <span>Progress to Gold</span>
+                        <span>{bettingLimitsProfile.tierProgress}%</span>
+                      </div>
+                      <div className="h-2 overflow-hidden rounded-full bg-muted">
+                        <div
+                          className="h-full rounded-full bg-primary"
+                          style={{ width: `${bettingLimitsProfile.tierProgress}%` }}
+                        />
+                      </div>
+                    </div>
+                    <Button asChild variant="outline" className="w-full">
+                      <Link href="/profile/limits">View detailed limits</Link>
+                    </Button>
+                  </CardContent>
+                </Card>
+              </div>
+
               <div className="grid gap-6 md:grid-cols-2">
                 <div>
                   <h2 className="text-xl font-semibold mb-4">Select a Match</h2>
@@ -471,19 +614,71 @@ export default function StakePage() {
             </TabsContent>
 
             <TabsContent value="completed" className="mt-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Completed Stakes</CardTitle>
-                  <CardDescription>
-                    History of your past stakes and outcomes
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-center py-8 text-muted-foreground">
-                    <p>No completed stakes to display</p>
-                  </div>
-                </CardContent>
-              </Card>
+              <div className="space-y-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Completed Stakes</CardTitle>
+                    <CardDescription>
+                      Review settled bets and file disputes for incorrect outcomes.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    {settledBets.map((bet) => {
+                      const linkedDispute = disputes.find((item) => item.betId === bet.id);
+
+                      return (
+                        <div
+                          key={bet.id}
+                          className="rounded-xl border bg-muted/20 p-4"
+                        >
+                          <div className="flex flex-wrap items-start justify-between gap-4">
+                            <div>
+                              <p className="font-medium">{bet.matchLabel}</p>
+                              <p className="text-sm text-muted-foreground">
+                                {bet.market}
+                              </p>
+                              <p className="mt-2 text-xs text-muted-foreground">
+                                Settled {new Date(bet.settledAt).toLocaleString()}
+                              </p>
+                            </div>
+
+                            <div className="flex flex-wrap items-center gap-2">
+                              {linkedDispute ? (
+                                <DisputeStatusBadge status={linkedDispute.status} />
+                              ) : null}
+                              <Badge variant="outline">
+                                Stake {bet.stakeAmount.toFixed(2)} XLM
+                              </Badge>
+                              <Badge variant="outline">
+                                Payout {bet.payoutAmount.toFixed(2)} XLM
+                              </Badge>
+                            </div>
+                          </div>
+
+                          <div className="mt-4 grid gap-3 md:grid-cols-[1fr_auto] md:items-center">
+                            <div className="rounded-xl border bg-background/70 p-3 text-sm text-muted-foreground">
+                              {bet.settledResult}
+                            </div>
+                            <Button
+                              variant="outline"
+                              disabled={
+                                !bet.eligibleForDispute || disputedBetIds.has(bet.id)
+                              }
+                              onClick={() => setActiveDisputeBet(bet)}
+                            >
+                              {disputedBetIds.has(bet.id)
+                                ? "Dispute filed"
+                                : "Dispute Result"}
+                            </Button>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </CardContent>
+                </Card>
+
+                <DisputeList disputes={disputes} transport={disputeTransport} />
+              </div>
             </TabsContent>
           </Tabs>
         </main>

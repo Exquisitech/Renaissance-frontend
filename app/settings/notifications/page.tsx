@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Bell, Mail, MessageSquare, Smartphone } from "lucide-react";
+import { showApiErrorToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import {
   fetchNotificationPreferences,
@@ -70,8 +71,8 @@ export default function NotificationPreferencesPage() {
     try {
       const data = await fetchNotificationPreferences(USER_ID);
       setPrefs(data);
-    } catch {
-      toast.error("Failed to load notification preferences.");
+    } catch (error) {
+      showApiErrorToast(error, "Failed to load notification preferences");
     } finally {
       setLoading(false);
     }
@@ -98,8 +99,8 @@ export default function NotificationPreferencesPage() {
     try {
       await updateNotificationPreferences(USER_ID, prefs);
       toast.success("Notification preferences saved.");
-    } catch {
-      toast.error("Failed to save preferences.");
+    } catch (error) {
+      showApiErrorToast(error, "Failed to save preferences");
     } finally {
       setSaving(false);
     }
@@ -110,8 +111,8 @@ export default function NotificationPreferencesPage() {
     try {
       await sendTestNotification(USER_ID, type);
       toast.success("Test notification sent!");
-    } catch {
-      toast.error("Failed to send test notification.");
+    } catch (error) {
+      showApiErrorToast(error, "Failed to send test notification");
     } finally {
       setTestingType(null);
     }

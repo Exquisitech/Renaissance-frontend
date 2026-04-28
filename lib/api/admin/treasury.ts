@@ -1,3 +1,5 @@
+import { apiRequest } from "@/lib/api/client"
+
 // ── Types ──────────────────────────────────────────────────────────────────────
 
 export interface AllocationCondition {
@@ -42,22 +44,17 @@ export type CreateAllocationRuleInput = Omit<
 const BASE = "/api/admin/treasury";
 
 export async function fetchAllocationRules(): Promise<AllocationRule[]> {
-  const res = await fetch(`${BASE}/rules`);
-  if (!res.ok) throw new Error("Failed to fetch allocation rules");
-  const data = await res.json();
+  const data = await apiRequest<{ rules?: AllocationRule[] }>(`${BASE}/rules`)
   return data.rules ?? [];
 }
 
 export async function createAllocationRule(
   input: CreateAllocationRuleInput
 ): Promise<AllocationRule> {
-  const res = await fetch(`${BASE}/rules`, {
+  const data = await apiRequest<{ rule: AllocationRule }>(`${BASE}/rules`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(input),
   });
-  if (!res.ok) throw new Error("Failed to create allocation rule");
-  const data = await res.json();
   return data.rule;
 }
 
@@ -65,39 +62,31 @@ export async function updateAllocationRule(
   id: string,
   input: Partial<CreateAllocationRuleInput>
 ): Promise<AllocationRule> {
-  const res = await fetch(`${BASE}/rules/${id}`, {
+  const data = await apiRequest<{ rule: AllocationRule }>(`${BASE}/rules/${id}`, {
     method: "PUT",
-    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(input),
   });
-  if (!res.ok) throw new Error("Failed to update allocation rule");
-  const data = await res.json();
   return data.rule;
 }
 
 export async function deleteAllocationRule(id: string): Promise<void> {
-  const res = await fetch(`${BASE}/rules/${id}`, { method: "DELETE" });
-  if (!res.ok) throw new Error("Failed to delete allocation rule");
+  await apiRequest(`${BASE}/rules/${id}`, { method: "DELETE" });
 }
 
 export async function reorderAllocationRules(
   orderedIds: string[]
 ): Promise<void> {
-  const res = await fetch(`${BASE}/rules/reorder`, {
+  await apiRequest(`${BASE}/rules/reorder`, {
     method: "PUT",
-    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ orderedIds }),
   });
-  if (!res.ok) throw new Error("Failed to reorder allocation rules");
 }
 
 export async function previewAllocation(
   treasuryBalance: number
 ): Promise<AllocationPreview[]> {
-  const res = await fetch(
-    `${BASE}/rules/preview?balance=${treasuryBalance}`
-  );
-  if (!res.ok) throw new Error("Failed to preview allocation");
-  const data = await res.json();
+  const data = await apiRequest<{ preview?: AllocationPreview[] }>(`${BASE}/rules/preview`, {
+    query: { balance: treasuryBalance },
+  })
   return data.preview ?? [];
 }

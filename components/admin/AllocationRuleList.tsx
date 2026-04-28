@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Pencil, Trash2, GripVertical, Eye } from "lucide-react";
+import { showApiErrorToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import type { AllocationRule, AllocationPreview, CreateAllocationRuleInput } from "@/lib/api/admin/treasury";
 import {
@@ -36,8 +37,8 @@ export function AllocationRuleList({ className }: AllocationRuleListProps) {
     try {
       const data = await fetchAllocationRules();
       setRules(data.sort((a, b) => a.priority - b.priority));
-    } catch {
-      toast.error("Failed to load allocation rules.");
+    } catch (error) {
+      showApiErrorToast(error, "Failed to load allocation rules");
     } finally {
       setLoading(false);
     }
@@ -51,8 +52,8 @@ export function AllocationRuleList({ className }: AllocationRuleListProps) {
       await deleteAllocationRule(id);
       setRules((prev) => prev.filter((r) => r.id !== id));
       toast.success("Rule deleted.");
-    } catch {
-      toast.error("Failed to delete rule.");
+    } catch (error) {
+      showApiErrorToast(error, "Failed to delete rule");
     }
   };
 
@@ -73,8 +74,8 @@ export function AllocationRuleList({ className }: AllocationRuleListProps) {
         toast.success("Rule created.");
       }
       setEditingId(null);
-    } catch {
-      toast.error("Failed to save rule.");
+    } catch (error) {
+      showApiErrorToast(error, "Failed to save rule");
     }
   };
 
@@ -95,8 +96,8 @@ export function AllocationRuleList({ className }: AllocationRuleListProps) {
     setDragIndex(null);
     try {
       await reorderAllocationRules(rules.map((r) => r.id));
-    } catch {
-      toast.error("Failed to save order.");
+    } catch (error) {
+      showApiErrorToast(error, "Failed to save order");
     }
   };
 
@@ -105,8 +106,8 @@ export function AllocationRuleList({ className }: AllocationRuleListProps) {
     try {
       const data = await previewAllocation(100_000);
       setPreview(data);
-    } catch {
-      toast.error("Failed to generate preview.");
+    } catch (error) {
+      showApiErrorToast(error, "Failed to generate preview");
     } finally {
       setPreviewLoading(false);
     }
