@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import {
   Camera,
   Mail,
@@ -20,7 +21,14 @@ import {
   Star,
   Activity,
   BookOpen,
+  Gauge,
 } from "lucide-react";
+import { UserTierBadge } from "@/components/profile/UserTierBadge";
+import {
+  bettingLimitsProfile,
+  formatLimitValue,
+  getRemainingLimit,
+} from "@/lib/betting-limits";
 
 // ── Utility ──────────────────────────────────────────────────────────────────
 function cn(...classes: (string | boolean | undefined)[]) {
@@ -317,6 +325,7 @@ export default function UserProfile() {
     { label: "Verified", color: "bg-emerald-500/15 text-emerald-500" },
     { label: "Early Access", color: "bg-amber-500/15 text-amber-500" },
   ];
+  const keyLimits = bettingLimitsProfile.limits.slice(0, 2);
 
   return (
     <div className="min-h-screen bg-[var(--background)] p-6 md:p-10">
@@ -348,6 +357,7 @@ export default function UserProfile() {
 
               {/* Badges */}
               <div className="flex flex-wrap gap-1.5 justify-center">
+                <UserTierBadge tier={bettingLimitsProfile.tier} />
                 {badges.map((b) => (
                   <span
                     key={b.label}
@@ -484,6 +494,67 @@ export default function UserProfile() {
                       >
                         Save changes
                       </button>
+                    </div>
+                  </div>
+                </SectionCard>
+
+                <SectionCard title="Betting Tier & Limits">
+                  <div className="space-y-4">
+                    <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                      <div>
+                        <p className="text-sm font-medium text-[var(--foreground)]">
+                          Responsible play profile
+                        </p>
+                        <p className="text-xs text-[var(--muted-foreground)] mt-1">
+                          Daily reset in {bettingLimitsProfile.dailyResetIn}
+                        </p>
+                      </div>
+                      <UserTierBadge
+                        tier={bettingLimitsProfile.tier}
+                        showDescription
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      {keyLimits.map((limit) => {
+                        const remaining = getRemainingLimit(limit.used, limit.max);
+                        const ratio = Math.min((limit.used / limit.max) * 100, 100);
+
+                        return (
+                          <div
+                            key={limit.label}
+                            className="rounded-xl border border-[var(--border)] bg-[var(--muted)] p-4"
+                          >
+                            <div className="flex items-center justify-between gap-3">
+                              <span className="text-sm font-medium text-[var(--foreground)]">
+                                {limit.label}
+                              </span>
+                              <Gauge size={14} className="text-[var(--muted-foreground)]" />
+                            </div>
+                            <p className="mt-3 text-xl font-semibold text-[var(--foreground)]">
+                              {formatLimitValue(remaining, limit.unit)}
+                            </p>
+                            <p className="text-xs text-[var(--muted-foreground)] mt-1">
+                              Remaining of {formatLimitValue(limit.max, limit.unit)}
+                            </p>
+                            <div className="mt-3 h-2 overflow-hidden rounded-full bg-[var(--border)]">
+                              <div
+                                className="h-full rounded-full bg-[var(--primary)]"
+                                style={{ width: `${ratio}%` }}
+                              />
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                    <div className="flex justify-end">
+                      <Link
+                        href="/profile/limits"
+                        className="inline-flex items-center rounded-xl bg-[var(--primary)] px-5 py-2 text-sm font-medium text-[var(--primary-foreground)] transition-opacity hover:opacity-90"
+                      >
+                        View detailed limits
+                      </Link>
                     </div>
                   </div>
                 </SectionCard>

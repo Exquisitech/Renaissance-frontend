@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { Header } from "@/components/header";
 import { SpinSessionPanel } from "@/components/spin/SpinSessionPanel";
+import { WalletBalance } from "@/components/wallet/WalletBalance";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -19,6 +20,13 @@ import { Separator } from "@/components/ui/separator";
 import { Calendar, Home, TrendingUp, CoinsIcon, Zap } from "lucide-react";
 import { showApiErrorToast, useToast } from "@/hooks/use-toast";
 import { executeSpin, type SpinSession } from "@/lib/api/spin";
+import {
+  convertFromXlm,
+  fetchExchangeRates,
+  formatDisplayAmount,
+  type ExchangeRatesSnapshot,
+  type SupportedCurrency,
+} from "@/lib/api/exchange-rates";
 
 export default function SpinToWinPage() {
   const { toast } = useToast();
@@ -27,6 +35,22 @@ export default function SpinToWinPage() {
   const [lastWin, setLastWin] = useState<string | null>(null);
   const [userBalance, setUserBalance] = useState(100); // Mock balance in XLM
   const [session, setSession] = useState<SpinSession | null>(null);
+  const [displayCurrency, setDisplayCurrency] = useState<SupportedCurrency>("XLM");
+  const [exchangeRates, setExchangeRates] = useState<ExchangeRatesSnapshot | null>(
+    null,
+  );
+
+  useEffect(() => {
+    void fetchExchangeRates().then(setExchangeRates);
+  }, []);
+
+  const displayedStake = useMemo(() => {
+    const usdcRate = exchangeRates?.rates.USDC ?? 0;
+    return formatDisplayAmount(
+      convertFromXlm(stakeAmount, displayCurrency, usdcRate),
+      displayCurrency,
+    );
+  }, [displayCurrency, exchangeRates, stakeAmount]);
 
   const handleSpin = async () => {
     if (stakeAmount < 10) {
@@ -123,6 +147,13 @@ export default function SpinToWinPage() {
 
             <Separator />
 
+            <WalletBalance
+              balanceXlm={userBalance}
+              displayCurrency={displayCurrency}
+              onCurrencyChange={setDisplayCurrency}
+              rates={exchangeRates}
+            />
+
             <div className="grid gap-6 lg:grid-cols-[1fr_300px]">
               <div>
                 <Card>
@@ -194,6 +225,10 @@ export default function SpinToWinPage() {
                       <p className="text-xs text-muted-foreground">
                         Your balance:{" "}
                         <span className="font-semibold">{userBalance} XLM</span>
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        Current display value:{" "}
+                        <span className="font-semibold">{displayedStake}</span>
                       </p>
                     </div>
 
