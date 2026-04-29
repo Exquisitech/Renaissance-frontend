@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useState } from "react";
 import {
   House,
   LayoutDashboard,
@@ -11,6 +12,8 @@ import {
   Settings,
   CalendarDays,
   Search,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -95,9 +98,29 @@ interface DashboardNavProps {
 export function DashboardNav({ variant = "default" }: DashboardNavProps) {
   const pathname = usePathname();
   const navItems = variant === "community" ? communityNavItems : defaultNavItems;
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   return (
-    <nav className="flex h-full w-72 flex-col bg-[#040b18] p-4 text-white">
+    <nav
+      className={cn(
+        "relative flex h-full flex-col bg-[#040b18] p-4 text-white transition-all duration-300",
+        isCollapsed ? "w-20" : "w-72"
+      )}
+    >
+      {/* Collapse Toggle Button */}
+      <Button
+        variant="ghost"
+        size="icon"
+        className="absolute -right-3 top-6 z-50 h-6 w-6 rounded-full border bg-[#040b18] p-0 hover:bg-[#202b3f]"
+        onClick={() => setIsCollapsed(!isCollapsed)}
+      >
+        {isCollapsed ? (
+          <ChevronRight className="h-4 w-4 text-white" />
+        ) : (
+          <ChevronLeft className="h-4 w-4 text-white" />
+        )}
+      </Button>
+
       <div className="flex flex-col gap-2">
         {navItems.map((item) => (
           <Button
@@ -107,12 +130,14 @@ export function DashboardNav({ variant = "default" }: DashboardNavProps) {
               "h-11 justify-start gap-3 rounded-xl px-4 text-base font-semibold text-white hover:bg-white/6 hover:text-white",
               pathname === item.href &&
                 "bg-[#202b3f] text-white hover:bg-[#202b3f]",
+              isCollapsed && "justify-center px-2"
             )}
             asChild
+            title={isCollapsed ? item.title : undefined}
           >
             <Link href={item.href}>
-              <item.icon className="h-4 w-4" />
-              {item.title}
+              <item.icon className={cn("h-4 w-4", isCollapsed && "h-5 w-5")} />
+              {!isCollapsed && <span>{item.title}</span>}
             </Link>
           </Button>
         ))}
@@ -123,18 +148,24 @@ export function DashboardNav({ variant = "default" }: DashboardNavProps) {
           <Separator className="my-8 bg-white/10" />
 
           <div className="flex flex-col gap-4">
-            <span className="px-3 text-sm font-semibold text-white">
-              Your Teams
-            </span>
+            {!isCollapsed && (
+              <span className="px-3 text-sm font-semibold text-white">
+                Your Teams
+              </span>
+            )}
             <div className="flex flex-col gap-2">
               {teams.map((team) => (
                 <Button
                   key={team.name}
                   variant="ghost"
-                  className="h-11 justify-start gap-3 rounded-xl px-4 text-base font-medium text-white hover:bg-white/6 hover:text-white"
+                  className={cn(
+                    "h-11 justify-start gap-3 rounded-xl px-4 text-base font-medium text-white hover:bg-white/6 hover:text-white",
+                    isCollapsed && "justify-center px-2"
+                  )}
+                  title={isCollapsed ? team.name : undefined}
                 >
-                  <div className={cn("h-5 w-5 rounded-full", team.color)} />
-                  {team.name}
+                  <div className={cn("h-5 w-5 rounded-full flex-shrink-0", team.color)} />
+                  {!isCollapsed && <span>{team.name}</span>}
                 </Button>
               ))}
             </div>
