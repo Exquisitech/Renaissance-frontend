@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server"
+import { NextRequest, NextResponse } from "next/server"
 import { oddsAPI, OddsServiceError, type DateFormat, type OddsFormat } from "@/lib/odds-api-service"
 
 function withCorrelationId(body: unknown, status = 200) {
@@ -11,10 +11,10 @@ function withCorrelationId(body: unknown, status = 200) {
 }
 
 export async function GET(
-  request: Request,
-  { params }: { params: { eventId: string } },
+  request: NextRequest,
+  context: { params: Promise<{ eventId: string }> }
 ) {
-  const { eventId } = params
+  const { eventId } = await context.params
   const { searchParams } = new URL(request.url)
   const sportKey = searchParams.get("sportKey") ?? "soccer_epl"
   const region = searchParams.get("region") ?? "uk"

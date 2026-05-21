@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server"
+import { NextRequest, NextResponse } from "next/server"
 import { deleteSession, getSession, updateSession } from "../store"
 
 function withCorrelationId<T>(payload: T, init?: ResponseInit) {
@@ -12,7 +12,7 @@ function withCorrelationId<T>(payload: T, init?: ResponseInit) {
 }
 
 export async function GET(
-  _request: Request,
+  _request: NextRequest,
   { params }: { params: Promise<{ sessionId: string }> }
 ) {
   const { sessionId } = await params
@@ -32,7 +32,7 @@ export async function GET(
 }
 
 export async function PATCH(
-  request: Request,
+  request: NextRequest,
   { params }: { params: Promise<{ sessionId: string }> }
 ) {
   const { sessionId } = await params
@@ -57,7 +57,7 @@ export async function PATCH(
 }
 
 export async function DELETE(
-  _request: Request,
+  _request: NextRequest,
   { params }: { params: Promise<{ sessionId: string }> }
 ) {
   const { sessionId } = await params

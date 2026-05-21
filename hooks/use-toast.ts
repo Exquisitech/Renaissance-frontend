@@ -3,6 +3,7 @@
 import { toast as sonnerToast } from "sonner"
 import { ErrorToast } from "@/components/common/ErrorToast"
 import { normalizeApiError } from "@/lib/api/client"
+import * as React from "react"
 
 type ToastInput = {
   title: string
@@ -16,14 +17,19 @@ function showErrorToast(input: {
   description?: string
   correlationId?: string
 }) {
-  sonnerToast.custom((toastId) => (
-    <ErrorToast
-      title={input.title}
-      message={input.description ?? input.title}
-      correlationId={input.correlationId}
-      onDismiss={() => sonnerToast.dismiss(toastId)}
-    />
-  ))
+  sonnerToast.custom(function ErrorToastWrapper(toastId: string) {
+    return React.createElement(
+      ErrorToast,
+      {
+        title: input.title,
+        message: input.description ?? input.title,
+        correlationId: input.correlationId,
+        onDismiss: function dismissHandler() {
+          sonnerToast.dismiss(toastId)
+        },
+      }
+    )
+  })
 }
 
 export function showApiErrorToast(error: unknown, fallbackTitle = "Request failed") {
@@ -38,7 +44,7 @@ export function showApiErrorToast(error: unknown, fallbackTitle = "Request faile
 
 export function useToast() {
   return {
-    toast: ({ title, description, variant, correlationId }: ToastInput) => {
+    toast: function({ title, description, variant, correlationId }: ToastInput) {
       const message = description ? `${title}: ${description}` : title
 
       if (variant === "destructive") {

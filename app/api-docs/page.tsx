@@ -7,7 +7,7 @@ import { EndpointCard } from "@/components/docs/EndpointCard"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { Select } from "@/components/ui/select"
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
 import { apiDocTags, apiDocumentation } from "@/lib/api/docs"
 
 export default function ApiDocsPage() {
@@ -117,11 +117,17 @@ export default function ApiDocsPage() {
                 <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input className="pl-10" placeholder="Search endpoints" value={search} onChange={(event) => setSearch(event.target.value)} />
               </div>
-              <Select
-                value={selectedTag}
-                onValueChange={setSelectedTag}
-                options={[{ value: "all", label: "All tags" }, ...apiDocTags.map((tag) => ({ value: tag, label: tag }))]}
-              />
+              <Select value={selectedTag} onValueChange={setSelectedTag}>
+                <SelectTrigger>
+                  <SelectValue placeholder="All tags" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All tags</SelectItem>
+                  {apiDocTags.map((tag) => (
+                    <SelectItem key={tag} value={tag}>{tag}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </CardContent>
           </Card>
         </section>
