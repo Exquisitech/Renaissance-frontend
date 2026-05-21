@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server"
+import { NextRequest, NextResponse } from "next/server"
 import { oddsAPI, OddsServiceError, type DateFormat, type OddsFormat } from "@/lib/odds-api-service"
 
 function withCorrelationId(body: unknown, status = 200) {
@@ -10,7 +10,7 @@ function withCorrelationId(body: unknown, status = 200) {
   })
 }
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url)
   const sportKey = searchParams.get("sportKey") ?? "soccer_epl"
   const region = searchParams.get("region") ?? "uk"

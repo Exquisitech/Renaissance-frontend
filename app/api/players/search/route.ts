@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server"
+import { NextRequest, NextResponse } from "next/server"
 import { searchPlayers, PlayerServiceError } from "@/lib/rapidapi-player-service"
 
 function withCorrelationId(body: unknown, status = 200) {
@@ -10,7 +10,7 @@ function withCorrelationId(body: unknown, status = 200) {
   })
 }
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url)
   const query = searchParams.get("q") ?? ""
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useMemo } from "react";
 import Link from "next/link";
 import { Header } from "@/app/header";
 import { CreateDisputeModal } from "@/components/disputes/CreateDisputeModal";
@@ -36,6 +36,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { StakeForm } from "@/components/staking/StakeForm";
 import { StakePositionCard } from "@/components/staking/StakePositionCard";
 import { StakePosition, getUserStakes } from "@/lib/api/staking";
+import { BettingLimitsProfile, formatLimitValue } from "@/lib/betting-limits";
 
 type Match = {
   id: number;
@@ -66,6 +67,11 @@ export default function StakePage() {
   const [isLoadingPrediction, setIsLoadingPrediction] = useState(false);
   const [predictionError, setPredictionError] = useState<string | null>(null);
   const [userStakes, setUserStakes] = useState<StakePosition[]>([]);
+
+  const remainingDailyBetVolume = useMemo(() => {
+    const limit = bettingLimitsProfile.limits.find((l) => l.label === "Daily max bet volume");
+    return limit ? Math.max(limit.max - limit.used, 0) : Number.POSITIVE_INFINITY;
+  }, []);
 
   const loadUserStakes = async () => {
     try {
