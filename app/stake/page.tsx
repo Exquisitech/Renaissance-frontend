@@ -6,6 +6,8 @@ import { Header } from "@/app/header";
 import { CreateDisputeModal } from "@/components/disputes/CreateDisputeModal";
 import { DisputeList } from "@/components/disputes/DisputeList";
 import { DisputeStatusBadge } from "@/components/disputes/DisputeStatusBadge";
+import { ActiveBetCard } from "@/components/bets/ActiveBetCard";
+import { BetStatusBadge } from "@/components/bets/BetStatusBadge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -36,7 +38,27 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { StakeForm } from "@/components/staking/StakeForm";
 import { StakePositionCard } from "@/components/staking/StakePositionCard";
 import { StakePosition, getUserStakes } from "@/lib/api/staking";
-import { BettingLimitsProfile, formatLimitValue } from "@/lib/betting-limits";
+import {
+  bettingLimitsProfile,
+  formatLimitValue,
+  getRemainingLimit,
+} from "@/lib/betting-limits";
+import { UserTierBadge } from "@/components/profile/UserTierBadge";
+import {
+  createDispute,
+  fetchSettledBets,
+  fetchUserDisputes,
+  type DisputeRecord,
+  type SettledBet,
+} from "@/lib/api/disputes";
+import { useDisputeUpdates } from "@/hooks/use-dispute-updates";
+import {
+  fetchActiveBets,
+  fetchBetHistory,
+  subscribeToBetUpdates,
+  type ActiveBet,
+  type BetHistoryItem,
+} from "@/lib/api/bets";
 
 type Match = {
   id: number;
@@ -67,10 +89,22 @@ export default function StakePage() {
   const [isLoadingPrediction, setIsLoadingPrediction] = useState(false);
   const [predictionError, setPredictionError] = useState<string | null>(null);
   const [userStakes, setUserStakes] = useState<StakePosition[]>([]);
+  const [settledBets, setSettledBets] = useState<SettledBet[]>([]);
+  const [disputes, setDisputes] = useState<DisputeRecord[]>([]);
+  const [activeDisputeBet, setActiveDisputeBet] = useState<SettledBet | null>(
+    null,
+  );
+  const [submittingDispute, setSubmittingDispute] = useState(false);
+  const [activeBets, setActiveBets] = useState<ActiveBet[]>([]);
+  const [betHistory, setBetHistory] = useState<BetHistoryItem[]>([]);
 
   const remainingDailyBetVolume = useMemo(() => {
-    const limit = bettingLimitsProfile.limits.find((l) => l.label === "Daily max bet volume");
-    return limit ? Math.max(limit.max - limit.used, 0) : Number.POSITIVE_INFINITY;
+    const limit = bettingLimitsProfile.limits.find(
+      (entry) => entry.label === "Daily max bet volume",
+    );
+    return limit
+      ? Math.max(limit.max - limit.used, 0)
+      : Number.POSITIVE_INFINITY;
   }, []);
 
   const loadUserStakes = async () => {
@@ -81,6 +115,19 @@ export default function StakePage() {
       console.error("Failed to load user stakes:", error);
     }
   };
+
+  const loadActiveBets = useCallback(async () => {
+    try {
+      const [openBets, history] = await Promise.all([
+        fetchActiveBets("default-user"),
+        fetchBetHistory("default-user"),
+      ]);
+      setActiveBets(openBets);
+      setBetHistory(history);
+    } catch (error) {
+      console.error("Failed to load active bets:", error);
+    }
+  }, []);
 
   const upcomingMatches: Match[] = [
     {
@@ -262,6 +309,17 @@ export default function StakePage() {
   useEffect(() => {
     void loadDisputeData();
   }, [loadDisputeData]);
+
+  useEffect(() => {
+    void loadActiveBets();
+    return subscribeToBetUpdates(() => {
+      void loadActiveBets();
+    });
+  }, [loadActiveBets]);
+
+  useEffect(() => {
+    void loadUserStakes();
+  }, []);
 
   const disputeTransport = useDisputeUpdates(() => {
     void loadDisputeData();
@@ -587,35 +645,76 @@ export default function StakePage() {
             </TabsContent>
 
             <TabsContent value="my-stakes" className="mt-6">
-              <div className="space-y-4">
-                <h2 className="text-xl font-semibold">Your Active Stakes</h2>
-                {userStakes.length > 0 ? (
-                  <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                    {userStakes.map((stake) => (
-                      <StakePositionCard
-                        key={stake.id}
-                        stake={stake}
-                        onCompound={() => loadUserStakes()}
-                      />
-                    ))}
+              <div className="space-y-8">
+                <div className="space-y-4">
+                  <div>
+                    <h2 className="text-xl font-semibold">Your Active Bets</h2>
+                    <p className="text-sm text-muted-foreground">
+                      Cancel eligible bets before kickoff to receive a refund.
+                    </p>
                   </div>
-                ) : (
-                  <Card>
-                    <CardContent className="p-8 text-center">
-                      <div className="flex flex-col items-center justify-center space-y-4">
-                        <CoinsIcon className="h-12 w-12 text-muted-foreground" />
-                        <div>
-                          <h3 className="text-lg font-medium">
-                            No Active Stakes
-                          </h3>
-                          <p className="text-sm text-muted-foreground">
-                            Place your first stake to start earning with compound interest
-                          </p>
+                  {activeBets.length > 0 ? (
+                    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                      {activeBets.map((bet) => (
+                        <ActiveBetCard
+                          key={bet.id}
+                          bet={bet}
+                          onCancelled={() => {
+                            void loadActiveBets();
+                          }}
+                        />
+                      ))}
+                    </div>
+                  ) : (
+                    <Card>
+                      <CardContent className="p-8 text-center">
+                        <div className="flex flex-col items-center justify-center space-y-4">
+                          <CoinsIcon className="h-12 w-12 text-muted-foreground" />
+                          <div>
+                            <h3 className="text-lg font-medium">
+                              No active bets
+                            </h3>
+                            <p className="text-sm text-muted-foreground">
+                              Place a stake on an upcoming match to see it here.
+                            </p>
+                          </div>
                         </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                )}
+                      </CardContent>
+                    </Card>
+                  )}
+                </div>
+
+                <div className="space-y-4">
+                  <h2 className="text-xl font-semibold">Your Active Stakes</h2>
+                  {userStakes.length > 0 ? (
+                    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                      {userStakes.map((stake) => (
+                        <StakePositionCard
+                          key={stake.id}
+                          stake={stake}
+                          onCompound={() => loadUserStakes()}
+                        />
+                      ))}
+                    </div>
+                  ) : (
+                    <Card>
+                      <CardContent className="p-8 text-center">
+                        <div className="flex flex-col items-center justify-center space-y-4">
+                          <CoinsIcon className="h-12 w-12 text-muted-foreground" />
+                          <div>
+                            <h3 className="text-lg font-medium">
+                              No Active Stakes
+                            </h3>
+                            <p className="text-sm text-muted-foreground">
+                              Place your first stake to start earning with
+                              compound interest
+                            </p>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  )}
+                </div>
               </div>
             </TabsContent>
 
@@ -684,6 +783,58 @@ export default function StakePage() {
                 </Card>
 
                 <DisputeList disputes={disputes} transport={disputeTransport} />
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Bet history</CardTitle>
+                    <CardDescription>
+                      Cancellations and refunds appear here with the reason you
+                      provided.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    {betHistory.length === 0 ? (
+                      <p className="text-sm text-muted-foreground">
+                        No bet history yet.
+                      </p>
+                    ) : (
+                      betHistory.map((entry) => (
+                        <div
+                          key={entry.id}
+                          className="flex flex-wrap items-start justify-between gap-3 rounded-xl border bg-muted/20 p-4"
+                        >
+                          <div>
+                            <p className="font-medium">{entry.matchLabel}</p>
+                            <p className="text-sm text-muted-foreground">
+                              {entry.date} · stake {entry.stake.toFixed(2)} XLM @{" "}
+                              {entry.odds.toFixed(2)}
+                            </p>
+                            {entry.result === "cancelled" &&
+                            entry.cancellationReason ? (
+                              <p className="mt-2 text-xs text-muted-foreground">
+                                Reason: {entry.cancellationReason}
+                              </p>
+                            ) : null}
+                          </div>
+                          <div className="flex flex-wrap items-center gap-2">
+                            <BetStatusBadge
+                              status={
+                                entry.result === "cancelled"
+                                  ? "cancelled"
+                                  : entry.result === "win"
+                                    ? "won"
+                                    : entry.result === "loss"
+                                      ? "lost"
+                                      : "pending"
+                              }
+                            />
+                            <Badge variant="outline">{entry.status}</Badge>
+                          </div>
+                        </div>
+                      ))
+                    )}
+                  </CardContent>
+                </Card>
               </div>
             </TabsContent>
           </Tabs>

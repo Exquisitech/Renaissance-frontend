@@ -13,9 +13,11 @@ interface Bet {
   type: string;
   stake: number;
   odds: number;
-  result: 'win' | 'loss' | 'pending';
+  result: 'win' | 'loss' | 'pending' | 'cancelled';
   profit: number;
   status: string;
+  matchLabel?: string;
+  cancellationReason?: string;
 }
 
 interface BetHistoryProps {
@@ -70,6 +72,8 @@ export default function BetHistory({ bets }: BetHistoryProps) {
         return 'text-red-500';
       case 'pending':
         return 'text-yellow-500';
+      case 'cancelled':
+        return 'text-zinc-500';
       default:
         return 'text-muted-foreground';
     }
@@ -105,6 +109,7 @@ export default function BetHistory({ bets }: BetHistoryProps) {
               { value: 'win', label: 'Wins' },
               { value: 'loss', label: 'Losses' },
               { value: 'pending', label: 'Pending' },
+              { value: 'cancelled', label: 'Cancelled' },
             ]}
             placeholder="Filter by result"
             className="w-full sm:w-[180px]"
@@ -133,6 +138,7 @@ export default function BetHistory({ bets }: BetHistoryProps) {
                 <th className="pb-3 text-right text-sm font-medium">Stake</th>
                 <th className="pb-3 text-right text-sm font-medium">Odds</th>
                 <th className="pb-3 text-center text-sm font-medium">Result</th>
+                <th className="pb-3 text-left text-sm font-medium">Status</th>
                 <th className="pb-3 text-right text-sm font-medium">Profit/Loss</th>
               </tr>
             </thead>
@@ -147,8 +153,26 @@ export default function BetHistory({ bets }: BetHistoryProps) {
                   <td className={`py-3 text-center text-sm font-semibold ${getResultColor(bet.result)}`}>
                     {bet.result.toUpperCase()}
                   </td>
-                  <td className={`py-3 text-right text-sm font-semibold ${bet.profit >= 0 ? 'text-green-500' : 'text-red-500'}`}>
-                    {bet.profit >= 0 ? '+' : ''}${bet.profit.toFixed(2)}
+                  <td className="py-3 text-sm">
+                    <div className="flex flex-col">
+                      <span>{bet.status}</span>
+                      {bet.result === 'cancelled' && bet.cancellationReason ? (
+                        <span className="text-xs text-muted-foreground">
+                          {bet.cancellationReason}
+                        </span>
+                      ) : null}
+                    </div>
+                  </td>
+                  <td className={`py-3 text-right text-sm font-semibold ${
+                    bet.result === 'cancelled'
+                      ? 'text-zinc-500'
+                      : bet.profit >= 0
+                        ? 'text-green-500'
+                        : 'text-red-500'
+                  }`}>
+                    {bet.result === 'cancelled'
+                      ? 'Refunded'
+                      : `${bet.profit >= 0 ? '+' : ''}$${bet.profit.toFixed(2)}`}
                   </td>
                 </tr>
               ))}
