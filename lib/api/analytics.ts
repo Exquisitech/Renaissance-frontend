@@ -31,9 +31,11 @@ interface Bet {
   type: string;
   stake: number;
   odds: number;
-  result: 'win' | 'loss' | 'pending';
+  result: 'win' | 'loss' | 'pending' | 'cancelled';
   profit: number;
   status: string;
+  matchLabel?: string;
+  cancellationReason?: string;
 }
 
 // Mock data - replace with actual API calls
@@ -98,33 +100,82 @@ export async function getBetHistory(
   }
 ): Promise<{ bets: Bet[]; total: number }> {
   // TODO: Replace with actual API endpoint
-  const mockBets: Bet[] = Array.from({ length: limit }, (_, i) => {
-    const results: Array<'win' | 'loss' | 'pending'> = ['win', 'loss', 'pending'];
-    const types = ['sports', 'casino', 'predictions'];
-    const result = results[Math.floor(Math.random() * results.length)];
+  void filters;
+  void page;
+
+  const results: Array<'win' | 'loss' | 'pending' | 'cancelled'> = [
+    'win',
+    'loss',
+    'pending',
+    'cancelled',
+  ];
+  const types = ['sports', 'casino', 'predictions'];
+  const mockBets: Bet[] = Array.from({ length: limit }, (_, index) => {
+    const result = results[index % results.length];
     const stake = Math.round(Math.random() * 1000 * 100) / 100;
     const odds = Math.round((1.5 + Math.random() * 5) * 100) / 100;
-    const profit = result === 'win' ? Math.round(stake * (odds - 1) * 100) / 100 : result === 'loss' ? -stake : 0;
-    
+    const profit =
+      result === 'win'
+        ? Math.round(stake * (odds - 1) * 100) / 100
+        : result === 'loss'
+          ? -stake
+          : 0;
+
     const date = new Date();
     date.setDate(date.getDate() - Math.floor(Math.random() * 90));
-    
+
     return {
-      id: `BET-${String(i + 1).padStart(6, '0')}`,
+      id: `BET-${String(index + 1).padStart(6, '0')}`,
       date: date.toISOString().split('T')[0],
-      type: types[Math.floor(Math.random() * types.length)],
+      type: types[index % types.length],
       stake,
       odds,
       result,
       profit,
-      status: result === 'pending' ? 'Pending' : 'Settled',
+      status:
+        result === 'pending'
+          ? 'Pending'
+          : result === 'cancelled'
+            ? 'Cancelled'
+            : 'Settled',
+      cancellationReason:
+        result === 'cancelled' ? 'Cancelled by user before kickoff' : undefined,
     };
   });
-  
-  return {
-    bets: mockBets,
-    total: 347,
-  };
+
+  // Prefer persisted cancellations from the bets module when available (client).
+  try {
+    const { fetchBetHistory } = await import('@/lib/api/bets');
+    const persisted = await fetchBetHistory('default-user');
+    const cancelledFromApi = persisted
+      .filter((item) => item.result === 'cancelled')
+      .map((item) => ({
+        id: item.id,
+        date: item.date,
+        type: item.type,
+        stake: item.stake,
+        odds: item.odds,
+        result: item.result,
+        profit: item.profit,
+        status: item.status,
+        matchLabel: item.matchLabel,
+        cancellationReason: item.cancellationReason,
+      }));
+
+    const withoutDupes = mockBets.filter(
+      (bet) => !cancelledFromApi.some((item) => item.id === bet.id),
+    );
+
+    return {
+      bets: [...cancelledFromApi, ...withoutDupes].slice(0, limit),
+      total: 347 + cancelledFromApi.length,
+    };
+  } catch {
+    return {
+      bets: mockBets,
+      total: 347,
+    };
+  }
 }
 
 export async function exportAnalyticsReport(format: 'pdf' | 'csv' = 'csv'): Promise<Blob> {
